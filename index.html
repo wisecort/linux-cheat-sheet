@@ -419,6 +419,13 @@
       font-size: 14px;
     }
     .card.hidden { display: none !important; }
+    mark.search-hl {
+      background: rgba(0, 245, 255, .18);
+      color: var(--cyan);
+      border-radius: 2px;
+      padding: 0 2px;
+      font-style: normal;
+    }
     section.all-hidden > .grid,
     section.all-hidden > .grid.grid-wide { opacity: .3; pointer-events: none; }
 
@@ -667,6 +674,8 @@
   <a href="#systemd">systemd</a>
   <a href="#seguranca">Segurança</a>
   <a href="#kernel">Kernel</a>
+  <a href="#pacotes">Pacotes</a>
+  <a href="#oneliners">One-liners</a>
   <a href="#devops">DevOps</a>
   <a href="#vim">Vim</a>
   <a href="#nano">Nano</a>
@@ -1072,6 +1081,36 @@
         </div>
       </div>
 
+      <div class="card">
+        <div class="card-header"><span class="dot dot-cyan"></span>Exemplo real — matar processo travado</div>
+        <div class="card-body">
+          <div class="term">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">kill workflow</span>
+            </div>
+            <div class="term-body">
+<span class="cmt"># nginx travado, precisa reiniciar</span><br>
+<span class="prompt">$ </span><span class="cmd">ps aux | grep nginx</span><br>
+<span class="out">www-data  <span class="hl">1234</span>  0.0  0.1  nginx: worker</span><br>
+<span class="out">www-data  <span class="hl">1235</span>  0.0  0.1  nginx: worker</span><br>
+<span class="out">root      <span class="hl">1200</span>  0.0  0.2  nginx: master</span><br>
+<br>
+<span class="cmt"># tenta encerrar elegantemente (SIGTERM)</span><br>
+<span class="prompt">$ </span><span class="cmd">kill 1200</span><br>
+<span class="prompt">$ </span><span class="cmd">ps aux | grep nginx</span><br>
+<span class="out">root      1200  ... nginx: master</span>  <span class="cmt"># ainda vivo</span><br>
+<br>
+<span class="cmt"># força encerramento (SIGKILL)</span><br>
+<span class="prompt">$ </span><span class="cmd">kill <span class="flag">-9</span> 1200</span><br>
+<span class="prompt">$ </span><span class="cmd">pgrep nginx</span><br>
+<span class="out"></span><span class="cmt"># sem output = processo morto</span><br>
+<span class="prompt">$ </span><span class="cmd">systemctl start nginx</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -1157,6 +1196,37 @@
         </div>
       </div>
 
+      <div class="card">
+        <div class="card-header"><span class="dot dot-cyan"></span>Exemplo real — diagnosticar porta em uso</div>
+        <div class="card-body">
+          <div class="term">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">rede diagnóstico</span>
+            </div>
+            <div class="term-body">
+<span class="cmt"># qual processo está usando a porta 8080?</span><br>
+<span class="prompt">$ </span><span class="cmd">ss <span class="flag">-tlnp</span> | grep 8080</span><br>
+<span class="out">LISTEN  0  128  0.0.0.0:<span class="hl">8080</span>  0.0.0.0:*  users:(("node",pid=<span class="hl">3721</span>,fd=18))</span><br>
+<br>
+<span class="cmt"># matar o processo ou liberar a porta</span><br>
+<span class="prompt">$ </span><span class="cmd">kill 3721</span><br>
+<br>
+<span class="cmt"># verificar conectividade e latência</span><br>
+<span class="prompt">$ </span><span class="cmd">ping <span class="flag">-c 3</span> 8.8.8.8</span><br>
+<span class="out">PING 8.8.8.8: 56 bytes of data</span><br>
+<span class="out">64 bytes from 8.8.8.8: icmp_seq=1 ttl=118 time=<span class="hl">12.4 ms</span></span><br>
+<span class="out">64 bytes from 8.8.8.8: icmp_seq=2 ttl=118 time=<span class="hl">11.9 ms</span></span><br>
+<span class="out">--- 8.8.8.8 ping statistics --- 3 packets, 0% packet loss</span><br>
+<br>
+<span class="cmt"># DNS — qual IP resolve "github.com"?</span><br>
+<span class="prompt">$ </span><span class="cmd">dig +short github.com</span><br>
+<span class="out">140.82.114.4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -1237,6 +1307,38 @@
             <tr><td>/var/log/auth.log</td><td>Log de autenticações (Debian/Ubuntu)</td></tr>
             <tr><td>/var/log/secure</td><td>Log de autenticações (RHEL/CentOS)</td></tr>
           </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-cyan"></span>Exemplo real — criar usuário de deploy</div>
+        <div class="card-body">
+          <div class="term">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">user workflow</span>
+            </div>
+            <div class="term-body">
+<span class="cmt"># criar usuário "deploy" com home e bash</span><br>
+<span class="prompt">$ </span><span class="cmd">useradd <span class="flag">-m -s /bin/bash</span> deploy</span><br>
+<span class="prompt">$ </span><span class="cmd">passwd deploy</span><br>
+<span class="out">New password: ••••••••</span><br>
+<span class="out">Retype new password: ••••••••</span><br>
+<span class="out">passwd: password updated successfully</span><br>
+<br>
+<span class="cmt"># adicionar aos grupos docker e sudo</span><br>
+<span class="prompt">$ </span><span class="cmd">usermod <span class="flag">-aG</span> docker,sudo deploy</span><br>
+<br>
+<span class="cmt"># verificar grupos do usuário</span><br>
+<span class="prompt">$ </span><span class="cmd">id deploy</span><br>
+<span class="out">uid=1001(deploy) gid=1001(deploy) groups=1001(deploy),27(<span class="hl">sudo</span>),998(<span class="hl">docker</span>)</span><br>
+<br>
+<span class="cmt"># bloquear conta temporariamente</span><br>
+<span class="prompt">$ </span><span class="cmd">usermod <span class="flag">-L</span> deploy</span><br>
+<span class="prompt">$ </span><span class="cmd">passwd <span class="flag">-S</span> deploy</span><br>
+<span class="out">deploy <span class="hl">L</span> 2024-03-26 0 99999 7 -1  <span class="cmt">(locked)</span></span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1750,6 +1852,213 @@
             <tr><td>iostat</td><td>Estatísticas de I/O de disco e CPU</td></tr>
             <tr><td>dmesg <span class="flag">-T</span></td><td>Log do kernel com timestamps legíveis</td></tr>
             <tr><td>dmesg <span class="flag">-T | grep -i error</span></td><td>Filtra erros no log do kernel</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       PACOTES
+  ══════════════════════════════════════ -->
+  <section id="pacotes">
+    <div class="section-title"><span class="icon">📦</span>Gerenciadores de Pacotes</div>
+    <div class="section-desc">apt (Debian/Ubuntu), dnf (Fedora/RHEL), pacman (Arch) — os comandos mais usados no dia a dia.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>apt — Debian / Ubuntu</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>apt update</td><td>Atualiza lista de pacotes disponíveis</td></tr>
+            <tr><td>apt upgrade</td><td>Atualiza todos os pacotes instalados</td></tr>
+            <tr><td>apt full-upgrade</td><td>Atualiza removendo pacotes obsoletos</td></tr>
+            <tr><td>apt install <span class="arg">pkg</span></td><td>Instala pacote</td></tr>
+            <tr><td>apt remove <span class="arg">pkg</span></td><td>Remove pacote (mantém configs)</td></tr>
+            <tr><td>apt purge <span class="arg">pkg</span></td><td>Remove pacote e seus arquivos de config</td></tr>
+            <tr><td>apt autoremove</td><td>Remove dependências órfãs</td></tr>
+            <tr><td>apt search <span class="arg">termo</span></td><td>Busca pacotes pelo nome/descrição</td></tr>
+            <tr><td>apt show <span class="arg">pkg</span></td><td>Informações detalhadas do pacote</td></tr>
+            <tr><td>apt list --installed</td><td>Lista pacotes instalados</td></tr>
+            <tr><td>dpkg -l</td><td>Lista todos os pacotes (formato detalhado)</td></tr>
+            <tr><td>dpkg -i <span class="arg">pkg.deb</span></td><td>Instala pacote .deb local</td></tr>
+          </table>
+          <div class="term" style="margin-top:12px">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">apt na prática</span>
+            </div>
+            <div class="term-body">
+<span class="prompt">$ </span><span class="cmd">apt update && apt upgrade <span class="flag">-y</span></span><br>
+<span class="out">Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease</span><br>
+<span class="out">Reading package lists... Done</span><br>
+<span class="out">Calculating upgrade... <span class="hl">12 upgraded</span>, 0 newly installed</span><br>
+<span class="prompt">$ </span><span class="cmd">apt install <span class="flag">-y</span> htop curl git</span><br>
+<span class="out">The following NEW packages will be installed: htop curl git</span><br>
+<span class="out">Setting up htop (3.2.2) ...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>dnf — Fedora / RHEL / CentOS</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>dnf check-update</td><td>Verifica atualizações disponíveis</td></tr>
+            <tr><td>dnf upgrade</td><td>Atualiza todos os pacotes</td></tr>
+            <tr><td>dnf install <span class="arg">pkg</span></td><td>Instala pacote</td></tr>
+            <tr><td>dnf remove <span class="arg">pkg</span></td><td>Remove pacote e dependências não usadas</td></tr>
+            <tr><td>dnf autoremove</td><td>Remove pacotes órfãos</td></tr>
+            <tr><td>dnf search <span class="arg">termo</span></td><td>Busca nos repositórios</td></tr>
+            <tr><td>dnf info <span class="arg">pkg</span></td><td>Informações do pacote</td></tr>
+            <tr><td>dnf list installed</td><td>Lista pacotes instalados</td></tr>
+            <tr><td>dnf history</td><td>Histórico de transações</td></tr>
+            <tr><td>dnf history undo <span class="arg">ID</span></td><td>Desfaz uma transação específica</td></tr>
+            <tr><td>dnf group install <span class="arg">"Dev Tools"</span></td><td>Instala grupo de pacotes</td></tr>
+            <tr><td>rpm -qa</td><td>Lista todos os pacotes RPM instalados</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-cyan"></span>pacman — Arch Linux</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>pacman <span class="flag">-Syu</span></td><td>Atualiza sistema completo (sync + upgrade)</td></tr>
+            <tr><td>pacman <span class="flag">-S</span> <span class="arg">pkg</span></td><td>Instala pacote</td></tr>
+            <tr><td>pacman <span class="flag">-R</span> <span class="arg">pkg</span></td><td>Remove pacote</td></tr>
+            <tr><td>pacman <span class="flag">-Rs</span> <span class="arg">pkg</span></td><td>Remove pacote e dependências órfãs</td></tr>
+            <tr><td>pacman <span class="flag">-Ss</span> <span class="arg">termo</span></td><td>Busca nos repositórios</td></tr>
+            <tr><td>pacman <span class="flag">-Si</span> <span class="arg">pkg</span></td><td>Informações do pacote (remoto)</td></tr>
+            <tr><td>pacman <span class="flag">-Qi</span> <span class="arg">pkg</span></td><td>Informações do pacote (instalado)</td></tr>
+            <tr><td>pacman <span class="flag">-Q</span></td><td>Lista pacotes instalados</td></tr>
+            <tr><td>pacman <span class="flag">-Qdt</span></td><td>Lista órfãos (sem dependente)</td></tr>
+            <tr><td>pacman <span class="flag">-U</span> <span class="arg">pkg.tar.zst</span></td><td>Instala pacote local</td></tr>
+            <tr><td>yay <span class="flag">-S</span> <span class="arg">pkg</span></td><td>Instala do AUR (requer yay)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-purple"></span>snap &amp; flatpak</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td colspan="2" style="color:var(--muted);font-size:11px;padding-bottom:6px">Snap (Ubuntu/Canonical)</td></tr>
+            <tr><td>snap find <span class="arg">termo</span></td><td>Busca na Snap Store</td></tr>
+            <tr><td>snap install <span class="arg">pkg</span></td><td>Instala pacote snap</td></tr>
+            <tr><td>snap install <span class="arg">pkg</span> <span class="flag">--classic</span></td><td>Instala com acesso total ao sistema</td></tr>
+            <tr><td>snap list</td><td>Lista snaps instalados</td></tr>
+            <tr><td>snap refresh <span class="arg">pkg</span></td><td>Atualiza snap específico</td></tr>
+            <tr><td>snap remove <span class="arg">pkg</span></td><td>Remove snap</td></tr>
+            <tr><td colspan="2" style="color:var(--muted);font-size:11px;padding:6px 0">Flatpak (universal)</td></tr>
+            <tr><td>flatpak search <span class="arg">termo</span></td><td>Busca no Flathub</td></tr>
+            <tr><td>flatpak install <span class="arg">app</span></td><td>Instala aplicativo flatpak</td></tr>
+            <tr><td>flatpak update</td><td>Atualiza todos os flatpaks</td></tr>
+            <tr><td>flatpak list</td><td>Lista flatpaks instalados</td></tr>
+            <tr><td>flatpak uninstall <span class="arg">app</span></td><td>Remove flatpak</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       ONE-LINERS
+  ══════════════════════════════════════ -->
+  <section id="oneliners">
+    <div class="section-title"><span class="icon">⚡</span>One-liners úteis</div>
+    <div class="section-desc">Comandos combinados prontos para copiar e usar no dia a dia.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Arquivos &amp; Disco</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>du -sh * | sort -h | tail -20</td><td>Top 20 maiores arquivos/dirs no diretório atual</td></tr>
+            <tr><td>find . -name "*.log" -mtime +30 -delete</td><td>Apaga logs com mais de 30 dias</td></tr>
+            <tr><td>find . -empty -type f -delete</td><td>Remove todos os arquivos vazios</td></tr>
+            <tr><td>tar czf backup-$(date +%F).tar.gz /var/www</td><td>Backup com data no nome do arquivo</td></tr>
+            <tr><td>diff &lt;(ls dir1) &lt;(ls dir2)</td><td>Compara conteúdo de dois diretórios</td></tr>
+            <tr><td>wc -l **/*.py</td><td>Conta linhas em todos os .py recursivamente</td></tr>
+            <tr><td>cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 32</td><td>Gera senha aleatória de 32 caracteres</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>Processos &amp; Monitoramento</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>ps aux --sort=-%cpu | head -10</td><td>Top 10 processos por CPU</td></tr>
+            <tr><td>ps aux --sort=-%mem | head -10</td><td>Top 10 processos por memória</td></tr>
+            <tr><td>watch -n 1 'ss -s'</td><td>Monitor de conexões TCP em tempo real</td></tr>
+            <tr><td>lsof -i -P -n | grep LISTEN</td><td>Todas as portas em escuta com processo</td></tr>
+            <tr><td>while true; do clear; df -h; sleep 5; done</td><td>Monitor de disco a cada 5s</td></tr>
+            <tr><td>for pid in $(pgrep java); do ls -la /proc/$pid/exe; done</td><td>Binário de cada processo Java rodando</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>Rede &amp; Segurança</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>ss -tlnp | awk 'NR&gt;1{print $4,$6}' | column -t</td><td>Portas e processos em formato limpo</td></tr>
+            <tr><td>curl -s ipinfo.io/ip</td><td>Exibe seu IP público</td></tr>
+            <tr><td>curl -so /dev/null -w "%{http_code}" https://site.com</td><td>Verifica status HTTP de uma URL</td></tr>
+            <tr><td>openssl s_client -connect host:443 2>&amp;1 | grep "expire"</td><td>Data de expiração do certificado SSL</td></tr>
+            <tr><td>grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn | head</td><td>IPs com mais tentativas de login falhas</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-purple"></span>Texto &amp; Logs</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>grep -c "ERROR" app.log</td><td>Conta total de erros no log</td></tr>
+            <tr><td>grep "ERROR" app.log | awk '{print $1}' | sort | uniq -c</td><td>Erros agrupados por data</td></tr>
+            <tr><td>awk 'length &gt; 80' arquivo.txt</td><td>Linhas com mais de 80 caracteres</td></tr>
+            <tr><td>sort -t: -k3 -n /etc/passwd</td><td>Usuários ordenados por UID</td></tr>
+            <tr><td>awk '!seen[$0]++' arquivo.txt</td><td>Remove linhas duplicadas preservando ordem</td></tr>
+            <tr><td>sed -n '10,20p' arquivo.txt</td><td>Exibe apenas as linhas 10 a 20</td></tr>
+            <tr><td>journalctl -u nginx --since "1 hour ago" | grep -i error</td><td>Erros do nginx na última hora</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-yellow"></span>SSH &amp; Servidor</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>ssh user@host 'df -h'</td><td>Executa comando remoto sem abrir shell</td></tr>
+            <tr><td>ssh user@host 'tar czf - /var/www' &gt; backup.tar.gz</td><td>Backup remoto via SSH direto para arquivo local</td></tr>
+            <tr><td>for h in srv1 srv2 srv3; do echo "==$h=="; ssh $h uptime; done</td><td>Verifica uptime em múltiplos servidores</td></tr>
+            <tr><td>ssh -o StrictHostKeyChecking=no -o ConnectTimeout=3 user@host exit 2>/dev/null && echo UP || echo DOWN</td><td>Testa se servidor SSH está online</td></tr>
+            <tr><td>scp -r user@host:/var/log/nginx ./logs-$(date +%F)/</td><td>Baixa logs remotos com pasta datada</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-red"></span>Git produtivo</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>git log --oneline --graph --all --decorate</td><td>Histórico visual de todas as branches</td></tr>
+            <tr><td>git diff --stat HEAD~5</td><td>Resumo de mudanças nos últimos 5 commits</td></tr>
+            <tr><td>git stash list | wc -l</td><td>Quantas stashes existem</td></tr>
+            <tr><td>git shortlog -sn --all</td><td>Ranking de commits por autor</td></tr>
+            <tr><td>git log --since="1 week ago" --oneline</td><td>Commits da última semana</td></tr>
+            <tr><td>git branch --merged main | grep -v main | xargs git branch -d</td><td>Remove branches já mergeadas</td></tr>
           </table>
         </div>
       </div>
@@ -2489,6 +2798,28 @@
   const noResults     = document.getElementById('no-results');
   const noResultsTerm = document.getElementById('no-results-term');
 
+  // highlight helpers
+  function highlightNode(node, q) {
+    if (node.nodeType === 3) { // text node
+      const idx = node.nodeValue.toLowerCase().indexOf(q);
+      if (idx === -1) return;
+      const mark = document.createElement('mark');
+      mark.className = 'search-hl';
+      const after = node.splitText(idx);
+      after.splitText(q.length);
+      mark.appendChild(after.cloneNode());
+      after.parentNode.replaceChild(mark, after);
+    } else if (node.nodeType === 1 && node.nodeName !== 'SCRIPT') {
+      Array.from(node.childNodes).forEach(child => highlightNode(child, q));
+    }
+  }
+  function clearHighlight(el) {
+    el.querySelectorAll('mark.search-hl').forEach(m => {
+      m.parentNode.replaceChild(document.createTextNode(m.textContent), m);
+    });
+    el.normalize();
+  }
+
   searchInput.addEventListener('input', () => {
     const q = searchInput.value.trim().toLowerCase();
     let totalVisible = 0;
@@ -2498,6 +2829,7 @@
       let secVisible = 0;
 
       cards.forEach(card => {
+        clearHighlight(card);
         if (!q) {
           card.classList.remove('hidden');
           secVisible++;
@@ -2505,13 +2837,13 @@
         }
         if (card.textContent.toLowerCase().includes(q)) {
           card.classList.remove('hidden');
+          highlightNode(card, q);
           secVisible++;
         } else {
           card.classList.add('hidden');
         }
       });
 
-      // Oculta a seção inteira se não tiver nenhum card visível
       sec.style.display = (q && secVisible === 0) ? 'none' : '';
       totalVisible += secVisible;
     });
