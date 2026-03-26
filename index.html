@@ -787,24 +787,11 @@
             <tr><td>ls <span class="flag">-lah</span></td><td>Lista com detalhes e tamanho legível</td></tr>
             <tr><td>cd <span class="arg">~/dir</span></td><td>Muda de diretório</td></tr>
             <tr><td>tree <span class="flag">-L 2</span></td><td>Árvore de diretórios (2 níveis)</td></tr>
-            <tr><td>stat <span class="arg">foo</span></td><td>Metadados: inode, datas, permissões</td></tr>
             <tr><td>which <span class="arg">cmd</span></td><td>Caminho do executável no PATH</td></tr>
             <tr><td>man <span class="arg">cmd</span></td><td>Manual do comando</td></tr>
             <tr><td>history</td><td>Histórico de comandos</td></tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header"><span class="dot dot-orange"></span>Variáveis de Ambiente</div>
-        <div class="card-body">
-          <table class="cmd-table">
             <tr><td>export <span class="arg">VAR</span>=<span class="arg">val</span></td><td>Define e exporta variável</td></tr>
-            <tr><td>unset <span class="arg">VAR</span></td><td>Remove a variável</td></tr>
-            <tr><td>printenv <span class="arg">VAR</span></td><td>Exibe o valor de uma variável</td></tr>
-            <tr><td>$PATH</td><td>Diretórios de executáveis</td></tr>
-            <tr><td>$?</td><td>Código de saída do último comando</td></tr>
-            <tr><td>$$</td><td>PID do processo atual</td></tr>
+            <tr><td>$PATH / $? / $$</td><td>PATH / exit code / PID atual</td></tr>
           </table>
         </div>
       </div>
@@ -904,13 +891,12 @@
             r=4 &nbsp;w=2 &nbsp;x=1
           </div>
           <table class="cmd-table">
-            <tr><td>chmod <span class="arg">755</span> <span class="arg">file</span></td><td>rwxr-xr-x — executável padrão</td></tr>
-            <tr><td>chmod <span class="arg">644</span> <span class="arg">file</span></td><td>rw-r--r-- — arquivo padrão</td></tr>
-            <tr><td>chmod <span class="arg">600</span> <span class="arg">file</span></td><td>rw------- — chave SSH privada</td></tr>
+            <tr><td>chmod <span class="arg">755</span> <span class="arg">file</span></td><td>rwxr-xr-x</td></tr>
+            <tr><td>chmod <span class="arg">644</span> <span class="arg">file</span></td><td>rw-r--r--</td></tr>
+            <tr><td>chmod <span class="arg">600</span> <span class="arg">file</span></td><td>rw------- (chave SSH)</td></tr>
             <tr><td>chmod <span class="flag">+x</span> <span class="arg">script.sh</span></td><td>Adiciona execução</td></tr>
-            <tr><td>chmod <span class="flag">-R</span> <span class="arg">755 dir/</span></td><td>Aplica recursivamente</td></tr>
-            <tr><td>chmod <span class="arg">4755</span> <span class="arg">file</span></td><td>SUID — executa como dono</td></tr>
-            <tr><td>chmod <span class="arg">1777</span> <span class="arg">dir</span></td><td>Sticky bit — só dono apaga (/tmp)</td></tr>
+            <tr><td>chmod <span class="flag">-R</span> <span class="arg">755 dir/</span></td><td>Recursivo</td></tr>
+            <tr><td>chmod <span class="arg">4755</span> <span class="arg">file</span></td><td>SUID</td></tr>
           </table>
           <div class="term" style="margin-top:12px">
             <div class="term-bar">
