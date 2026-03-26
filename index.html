@@ -2699,110 +2699,57 @@
     <div class="grid">
 
       <div class="card">
-        <div class="card-header"><span class="dot dot-green"></span>htop — visão geral</div>
+        <div class="card-header"><span class="dot dot-green"></span>CPU &amp; processos</div>
         <div class="card-body">
-          <div class="term">
-            <div class="term-bar"><span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span><span class="term-label">htop</span></div>
-            <div class="term-body">
-<span class="prompt">$ </span><span class="cmd">htop</span>
-<span class="out">  CPU[||||||||||||||||||||||||||||  45.2%]   Tasks: 142, 312 thr; 2 running</span>
-<span class="out">  Mem[||||||||||||||||||||         3.12G/7.70G]   Load average: 0.87 1.02 0.94</span>
-<span class="out">  Swp[                             0K/2.00G]   Uptime: 3 days, 4:22:10</span>
-<span class="out"></span>
-<span class="out">  PID   USER  PRI  NI  VIRT   RES   SHR  S  %CPU  %MEM  TIME+     Command</span>
-<span class="out"> 1842  www    20   0  512M   45M   12M  S  12.3   0.6  1:23.45  nginx: worker</span>
-<span class="out"> 2190  app    20   0  1.2G  320M   18M  S   8.1   4.1  0:45.22  java -jar app</span>
-            </div>
-          </div>
           <table class="cmd-table">
+            <tr><td>htop</td><td>Monitor interativo de processos e CPU</td></tr>
             <tr><td>htop <span class="flag">-u</span> <span class="arg">www-data</span></td><td>Filtra processos de um usuário</td></tr>
             <tr><td>htop <span class="flag">-p</span> <span class="arg">1234,5678</span></td><td>Monitora PIDs específicos</td></tr>
-            <tr><td>htop <span class="flag">-d 5</span></td><td>Atualiza a cada 500ms (5 × 0.1s)</td></tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header"><span class="dot dot-cyan"></span>vmstat — CPU, memória e I/O</div>
-        <div class="card-body">
-          <div class="term">
-            <div class="term-bar"><span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span><span class="term-label">vmstat</span></div>
-            <div class="term-body">
-<span class="prompt">$ </span><span class="cmd">vmstat 2 5</span>
-<span class="out">procs --------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
-<span class="out"> r  b   swpd   free   buff  cache   si  so    bi    bo   in   cs us sy id wa</span>
-<span class="out"> 1  0      0 1248596 245760 2891648  0   0     2    14   78  142  5  1 93  1</span>
-<span class="out"> 0  0      0 1247980 245760 2891912  0   0     0    28  210  385  3  1 96  0</span>
-<span class="out"> 2  0      0 1246304 245760 2892160  0   0     0     0  198  360 12  2 86  0</span>
-            </div>
-          </div>
-          <table class="cmd-table">
-            <tr><td><span class="hl">r</span></td><td>Processos aguardando CPU (>nCPUs = saturação)</td></tr>
-            <tr><td><span class="hl">b</span></td><td>Processos bloqueados em I/O</td></tr>
-            <tr><td><span class="hl">si / so</span></td><td>Swap in/out — valores &gt; 0 indicam pressão de memória</td></tr>
-            <tr><td><span class="hl">wa</span></td><td>% CPU aguardando I/O — acima de 20% é alerta</td></tr>
-            <tr><td>vmstat <span class="flag">-s</span></td><td>Resumo estatístico desde o boot</td></tr>
-            <tr><td>vmstat <span class="flag">-d</span></td><td>Estatísticas de disco</td></tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header"><span class="dot dot-orange"></span>iotop — I/O por processo</div>
-        <div class="card-body">
-          <div class="term">
-            <div class="term-bar"><span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span><span class="term-label">iotop</span></div>
-            <div class="term-body">
-<span class="prompt">$ </span><span class="cmd">sudo iotop -o</span>
-<span class="out">Total DISK READ: 0.00 B/s | Total DISK WRITE: 3.45 M/s</span>
-<span class="out">  TID  PRIO  USER    DISK READ  DISK WRITE  SWAPIN    IO>   COMMAND</span>
-<span class="out"> 3120  be/4  mysql       0.00 B/s    2.81 M/s  0.00 % 12.55 % mysqld</span>
-<span class="out"> 1842  be/4  www-data    0.00 B/s  678.23 K/s  0.00 %  4.20 % nginx</span>
-            </div>
-          </div>
-          <table class="cmd-table">
-            <tr><td>sudo iotop <span class="flag">-o</span></td><td>Mostra só processos com I/O ativo</td></tr>
-            <tr><td>sudo iotop <span class="flag">-b -n 3</span></td><td>Modo batch, 3 iterações (para scripts)</td></tr>
-            <tr><td>sudo iotop <span class="flag">-p</span> <span class="arg">1234</span></td><td>Monitora apenas o PID informado</td></tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header"><span class="dot dot-pink"></span>nethogs — tráfego por processo</div>
-        <div class="card-body">
-          <div class="term">
-            <div class="term-bar"><span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span><span class="term-label">nethogs</span></div>
-            <div class="term-body">
-<span class="prompt">$ </span><span class="cmd">sudo nethogs eth0</span>
-<span class="out">NetHogs version 0.8.5</span>
-<span class="out"></span>
-<span class="out">  PID USER     PROGRAM                      DEV     SENT     RECEIVED</span>
-<span class="out"> 2190 app      java                         eth0    1.245    0.382 KB/s</span>
-<span class="out"> 1842 www-data nginx: worker process        eth0    0.543    2.118 KB/s</span>
-<span class="out">      TOTAL                                         1.788    2.500 KB/s</span>
-            </div>
-          </div>
-          <table class="cmd-table">
-            <tr><td>sudo nethogs <span class="arg">eth0</span></td><td>Monitora interface específica</td></tr>
-            <tr><td>sudo nethogs <span class="flag">-d 2</span></td><td>Atualiza a cada 2 segundos</td></tr>
-            <tr><td>sudo nethogs <span class="flag">-b</span> <span class="arg">eth0</span></td><td>Modo batch (para logs/scripts)</td></tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header"><span class="dot dot-blue"></span>Outros monitores essenciais</div>
-        <div class="card-body">
-          <table class="cmd-table">
-            <tr><td>watch <span class="flag">-n 1</span> <span class="arg">'free -h'</span></td><td>Memória atualizada a cada 1s</td></tr>
-            <tr><td>iostat <span class="flag">-xz 2 5</span></td><td>I/O estendido de discos (2s, 5x)</td></tr>
+            <tr><td>top <span class="flag">-b -n 1</span> | head -20</td><td>Snapshot sem modo interativo</td></tr>
             <tr><td>mpstat <span class="flag">-P ALL 1</span></td><td>CPU por core a cada 1 segundo</td></tr>
-            <tr><td>sar <span class="flag">-u 1 5</span></td><td>Histórico de CPU via sysstat</td></tr>
-            <tr><td>dstat <span class="flag">--cpu --mem --net --disk</span></td><td>Painel combinado em tempo real</td></tr>
-            <tr><td>lsof <span class="flag">-i</span></td><td>Todos os arquivos/sockets abertos</td></tr>
-            <tr><td>ss <span class="flag">-tunapl</span></td><td>Sockets TCP/UDP com PID e processo</td></tr>
-            <tr><td>perf top</td><td>Profiling de CPU por símbolo (kernel/user)</td></tr>
+            <tr><td>pidstat <span class="flag">-u 1 3</span></td><td>CPU por processo (3 amostras)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-cyan"></span>Memória &amp; swap</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>free <span class="flag">-h</span></td><td>Uso de memória e swap legível</td></tr>
+            <tr><td>watch <span class="flag">-n 1</span> <span class="arg">'free -h'</span></td><td>Memória atualizada a cada 1s</td></tr>
+            <tr><td>vmstat <span class="flag">2 5</span></td><td>CPU, memória, I/O — 5 amostras de 2s</td></tr>
+            <tr><td>vmstat <span class="flag">-s</span></td><td>Resumo estatístico desde o boot</td></tr>
+            <tr><td>ps aux --sort=-%mem | head -10</td><td>Top 10 por consumo de memória</td></tr>
+            <tr><td>dmesg | grep <span class="arg">-i oom</span></td><td>Verifica se OOM Killer atuou</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>Disco &amp; I/O</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>iostat <span class="flag">-xz 2 5</span></td><td>I/O estendido de discos (2s, 5x)</td></tr>
+            <tr><td>sudo iotop <span class="flag">-o</span></td><td>I/O por processo (só ativos)</td></tr>
+            <tr><td>sudo iotop <span class="flag">-b -n 3</span></td><td>Modo batch, 3 iterações</td></tr>
+            <tr><td>df <span class="flag">-h</span></td><td>Uso de disco por partição</td></tr>
+            <tr><td>du <span class="flag">-sh</span> <span class="arg">/*</span> 2>/dev/null | sort <span class="flag">-rh</span> | head -10</td><td>Diretórios maiores na raiz</td></tr>
+            <tr><td>lsblk <span class="flag">-o NAME,SIZE,TYPE,MOUNTPOINT</span></td><td>Dispositivos de bloco</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-pink"></span>Rede &amp; tráfego</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>sudo nethogs <span class="arg">eth0</span></td><td>Tráfego por processo na interface</td></tr>
+            <tr><td>ss <span class="flag">-tunapl</span></td><td>Sockets TCP/UDP com PID</td></tr>
+            <tr><td>iftop <span class="flag">-i eth0</span></td><td>Tráfego em tempo real por conexão</td></tr>
+            <tr><td>nload <span class="arg">eth0</span></td><td>Gráfico de entrada/saída da interface</td></tr>
+            <tr><td>dstat <span class="flag">--net</span></td><td>Taxa de transferência de rede</td></tr>
+            <tr><td>lsof <span class="flag">-i</span></td><td>Todos os sockets abertos com processo</td></tr>
           </table>
         </div>
       </div>
@@ -2822,135 +2769,82 @@
     <div class="grid">
 
       <div class="card">
-        <div class="card-header"><span class="dot dot-red"></span>Sistema lento — diagnóstico</div>
+        <div class="card-header"><span class="dot dot-red"></span>Sistema lento</div>
         <div class="card-body">
-          <div class="term">
-            <div class="term-bar"><span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span><span class="term-label">diagnóstico rápido</span></div>
-            <div class="term-body">
-<span class="prompt">$ </span><span class="cmd">uptime</span>
-<span class="out"> 14:32:10 up 3 days,  4:22,  2 users,  load average: 4.12, 3.87, 2.54</span>
-<span class="cmt"># load > nCPUs = sistema saturado</span>
-
-<span class="prompt">$ </span><span class="cmd">nproc</span>
-<span class="out">4</span>
-<span class="cmt"># load 4.12 com 4 cores = 100% utilização</span>
-
-<span class="prompt">$ </span><span class="cmd">ps aux --sort=-%cpu | head -6</span>
-<span class="out">USER  PID %CPU %MEM VSZ    RSS   COMMAND</span>
-<span class="out">app   2190 98.3  4.1 1.2G  320M  java -jar app.jar</span>
-            </div>
-          </div>
           <table class="cmd-table">
-            <tr><td>top <span class="flag">-b -n 1</span> | head -20</td><td>Snapshot de processos sem interação</td></tr>
-            <tr><td>pidstat <span class="flag">-u 1 3</span></td><td>CPU por processo a cada 1s (3x)</td></tr>
-            <tr><td>strace <span class="flag">-p</span> <span class="arg">1234</span></td><td>System calls de um processo específico</td></tr>
-            <tr><td>lsof <span class="flag">-p</span> <span class="arg">1234</span></td><td>Arquivos abertos por um processo</td></tr>
+            <tr><td>uptime</td><td>Load average — acima do nº de cores = saturado</td></tr>
+            <tr><td>ps aux --sort=-%cpu | head -10</td><td>Top processos por CPU</td></tr>
+            <tr><td>top <span class="flag">-b -n 1</span> | head -20</td><td>Snapshot sem modo interativo</td></tr>
+            <tr><td>strace <span class="flag">-p</span> <span class="arg">PID</span></td><td>System calls de um processo</td></tr>
+            <tr><td>lsof <span class="flag">-p</span> <span class="arg">PID</span></td><td>Arquivos abertos por um processo</td></tr>
           </table>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-header"><span class="dot dot-orange"></span>Disco cheio — encontrar culpados</div>
+        <div class="card-header"><span class="dot dot-orange"></span>Disco cheio</div>
         <div class="card-body">
-          <div class="term">
-            <div class="term-bar"><span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span><span class="term-label">disco cheio</span></div>
-            <div class="term-body">
-<span class="prompt">$ </span><span class="cmd">df -h</span>
-<span class="out">Filesystem  Size  Used Avail Use% Mounted on</span>
-<span class="out">/dev/sda1    50G   50G    0G 100% /</span>
-<span class="out">/dev/sdb1   200G   80G  120G  40% /data</span>
-
-<span class="prompt">$ </span><span class="cmd">du -sh /* 2>/dev/null | sort -rh | head -10</span>
-<span class="out">18G  /var</span>
-<span class="out">12G  /home</span>
-<span class="out"> 9G  /usr</span>
-
-<span class="prompt">$ </span><span class="cmd">du -sh /var/* 2>/dev/null | sort -rh | head -5</span>
-<span class="out">14G  /var/log</span>
-            </div>
-          </div>
           <table class="cmd-table">
-            <tr><td>find /var/log <span class="flag">-name "*.log" -size +100M</span></td><td>Logs maiores que 100 MB</td></tr>
-            <tr><td>journalctl <span class="flag">--disk-usage</span></td><td>Espaço usado pelo journal</td></tr>
+            <tr><td>df <span class="flag">-h</span></td><td>Uso por partição</td></tr>
+            <tr><td>df <span class="flag">-i</span></td><td>Inodes — disco "cheio" sem arquivos grandes</td></tr>
+            <tr><td>du <span class="flag">-sh</span> <span class="arg">/*</span> 2>/dev/null | sort <span class="flag">-rh</span> | head -10</td><td>Maiores diretórios na raiz</td></tr>
+            <tr><td>find /var/log <span class="flag">-name "*.log" -size +100M</span></td><td>Logs acima de 100 MB</td></tr>
             <tr><td>journalctl <span class="flag">--vacuum-size=500M</span></td><td>Limita journal a 500 MB</td></tr>
-            <tr><td>docker system df</td><td>Espaço usado pelo Docker</td></tr>
-            <tr><td>docker system prune <span class="flag">-af</span></td><td>Remove imagens/volumes não usados</td></tr>
-            <tr><td>df <span class="flag">-i</span></td><td>Verifica inodes esgotados (df 100% mas espaço livre)</td></tr>
+            <tr><td>docker system prune <span class="flag">-af</span></td><td>Limpa imagens e volumes Docker</td></tr>
           </table>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-header"><span class="dot dot-purple"></span>Memória alta — diagnóstico</div>
+        <div class="card-header"><span class="dot dot-purple"></span>Memória alta</div>
         <div class="card-body">
-          <div class="term">
-            <div class="term-bar"><span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span><span class="term-label">memória</span></div>
-            <div class="term-body">
-<span class="prompt">$ </span><span class="cmd">free -h</span>
-<span class="out">              total  used  free  shared  buff/cache  available</span>
-<span class="out">Mem:           7.7G  7.1G  128M     45M        512M       412M</span>
-<span class="out">Swap:          2.0G  1.8G  200M</span>
-<span class="cmt"># available < 10% = pressão real</span>
-
-<span class="prompt">$ </span><span class="cmd">ps aux --sort=-%mem | head -6</span>
-<span class="out">USER  PID %CPU %MEM COMMAND</span>
-<span class="out">app   2190  4.1 41.5 java -jar app.jar</span>
-            </div>
-          </div>
           <table class="cmd-table">
-            <tr><td>cat /proc/<span class="arg">PID</span>/status | grep VmRSS</td><td>Memória residente de um processo</td></tr>
-            <tr><td>smem <span class="flag">-r -k</span> | head -10</td><td>Ranking de uso de memória real (PSS)</td></tr>
-            <tr><td>sysctl <span class="arg">vm.swappiness</span></td><td>Tendência de usar swap (0-100)</td></tr>
-            <tr><td>sudo sysctl <span class="flag">-w</span> <span class="arg">vm.swappiness=10</span></td><td>Reduz uso de swap em runtime</td></tr>
-            <tr><td>dmesg | grep <span class="arg">-i "oom"</span></td><td>Verifica se OOM Killer atuou</td></tr>
-            <tr><td>cat /proc/meminfo | grep <span class="arg">Cached</span></td><td>Memória em cache (pode ser liberada)</td></tr>
+            <tr><td>free <span class="flag">-h</span></td><td>Visão geral — available &lt; 10% = pressão real</td></tr>
+            <tr><td>ps aux --sort=-%mem | head -10</td><td>Top processos por memória</td></tr>
+            <tr><td>dmesg | grep <span class="arg">-i oom</span></td><td>OOM Killer foi acionado?</td></tr>
+            <tr><td>sysctl <span class="arg">vm.swappiness</span></td><td>Tendência de usar swap (padrão = 60)</td></tr>
+            <tr><td>sudo sysctl <span class="flag">-w</span> <span class="arg">vm.swappiness=10</span></td><td>Reduz swap em runtime</td></tr>
           </table>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-header"><span class="dot dot-cyan"></span>Rede com problemas</div>
+        <div class="card-header"><span class="dot dot-cyan"></span>Rede</div>
         <div class="card-body">
           <table class="cmd-table">
-            <tr><td>ping <span class="flag">-c 4</span> <span class="arg">8.8.8.8</span></td><td>Teste básico de conectividade</td></tr>
-            <tr><td>traceroute <span class="arg">8.8.8.8</span></td><td>Rota até o destino com latência</td></tr>
-            <tr><td>mtr <span class="flag">--report</span> <span class="arg">8.8.8.8</span></td><td>traceroute contínuo com estatísticas</td></tr>
-            <tr><td>ss <span class="flag">-tnp</span> | grep <span class="arg">ESTAB</span></td><td>Conexões TCP estabelecidas com PID</td></tr>
-            <tr><td>ss <span class="flag">-tnp</span> | grep <span class="arg">TIME-WAIT</span> | wc -l</td><td>TIME-WAIT elevado = possível sobrecarga</td></tr>
-            <tr><td>tcpdump <span class="flag">-i eth0 -nn -c 50</span></td><td>Captura 50 pacotes na interface</td></tr>
-            <tr><td>curl <span class="flag">-w "%{time_total}\n" -o /dev/null -s</span> <span class="arg">http://host</span></td><td>Latência HTTP de um endpoint</td></tr>
-            <tr><td>dig <span class="arg">@8.8.8.8 example.com</span></td><td>Resolve DNS via servidor específico</td></tr>
-            <tr><td>nmap <span class="flag">-sV -p 1-1024</span> <span class="arg">192.168.1.1</span></td><td>Scan de portas e versões de serviços</td></tr>
+            <tr><td>ping <span class="flag">-c 4</span> <span class="arg">8.8.8.8</span></td><td>Conectividade básica</td></tr>
+            <tr><td>mtr <span class="flag">--report</span> <span class="arg">8.8.8.8</span></td><td>Rota com estatísticas de latência</td></tr>
+            <tr><td>ss <span class="flag">-tnp</span> | grep <span class="arg">ESTAB</span></td><td>Conexões TCP ativas com PID</td></tr>
+            <tr><td>tcpdump <span class="flag">-i eth0 -nn -c 50</span></td><td>Captura 50 pacotes</td></tr>
+            <tr><td>dig <span class="arg">@8.8.8.8 example.com</span></td><td>Resolve DNS via servidor externo</td></tr>
+            <tr><td>curl <span class="flag">-w "%{time_total}\n" -o /dev/null -s</span> <span class="arg">http://host</span></td><td>Latência HTTP</td></tr>
           </table>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-header"><span class="dot dot-green"></span>Serviço falhando — checklist</div>
+        <div class="card-header"><span class="dot dot-green"></span>Serviço falhando</div>
         <div class="card-body">
           <table class="cmd-table">
-            <tr><td>systemctl status <span class="arg">nginx</span></td><td>Estado, PID, uso de memória e últimas linhas de log</td></tr>
-            <tr><td>journalctl <span class="flag">-u</span> <span class="arg">nginx</span> <span class="flag">-n 50 --no-pager</span></td><td>Últimas 50 linhas do journal do serviço</td></tr>
-            <tr><td>journalctl <span class="flag">-u</span> <span class="arg">nginx</span> <span class="flag">--since "10 min ago"</span></td><td>Logs dos últimos 10 minutos</td></tr>
-            <tr><td>nginx <span class="flag">-t</span></td><td>Testa configuração antes de recarregar</td></tr>
-            <tr><td>ss <span class="flag">-tlnp</span> | grep <span class="arg">:80</span></td><td>Verifica se a porta 80 está em uso</td></tr>
-            <tr><td>systemctl list-dependencies <span class="arg">nginx</span></td><td>Dependências do serviço</td></tr>
-            <tr><td>systemctl reset-failed <span class="arg">nginx</span></td><td>Limpa estado de falha antes de reiniciar</td></tr>
+            <tr><td>systemctl status <span class="arg">nginx</span></td><td>Estado, PID e últimas linhas de log</td></tr>
+            <tr><td>journalctl <span class="flag">-u</span> <span class="arg">nginx</span> <span class="flag">-n 50</span></td><td>Últimas 50 linhas do journal</td></tr>
+            <tr><td>nginx <span class="flag">-t</span></td><td>Testa config antes de recarregar</td></tr>
+            <tr><td>ss <span class="flag">-tlnp</span> | grep <span class="arg">:80</span></td><td>Verifica se a porta está em uso</td></tr>
+            <tr><td>systemctl reset-failed <span class="arg">nginx</span></td><td>Limpa estado de falha</td></tr>
           </table>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-header"><span class="dot dot-yellow"></span>Boot e kernel — logs de erro</div>
+        <div class="card-header"><span class="dot dot-yellow"></span>Boot &amp; kernel</div>
         <div class="card-body">
           <table class="cmd-table">
-            <tr><td>dmesg <span class="flag">-T --level=err,crit</span></td><td>Erros do kernel com timestamp legível</td></tr>
-            <tr><td>dmesg <span class="flag">-T</span> | grep <span class="arg">-iE "fail|error|warn"</span></td><td>Filtra mensagens de erro/aviso</td></tr>
+            <tr><td>dmesg <span class="flag">-T --level=err,crit</span></td><td>Erros do kernel com timestamp</td></tr>
             <tr><td>journalctl <span class="flag">-b -p err</span></td><td>Erros do boot atual</td></tr>
             <tr><td>journalctl <span class="flag">-b -1 -p err</span></td><td>Erros do boot anterior</td></tr>
-            <tr><td>systemd-analyze</td><td>Tempo total de boot (firmware + kernel + userspace)</td></tr>
+            <tr><td>systemd-analyze blame | head -10</td><td>Top 10 serviços lentos no boot</td></tr>
             <tr><td>systemd-analyze critical-chain</td><td>Caminho crítico que atrasou o boot</td></tr>
-            <tr><td>last reboot</td><td>Histórico de reboots do sistema</td></tr>
+            <tr><td>last reboot</td><td>Histórico de reboots</td></tr>
           </table>
         </div>
       </div>
