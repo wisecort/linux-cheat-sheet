@@ -599,16 +599,21 @@
     @media (max-width: 900px) {
       .grid-wide { grid-template-columns: 1fr; }
     }
+    @media (max-width: 768px) {
+      .hero { padding: 32px 20px 24px; }
+      .hero-stats { gap: 8px; }
+    }
+
     @media (max-width: 600px) {
       /* hero compacto */
-      .hero { padding: 24px 16px 20px; }
-      .hero-badge { font-size: 10px; padding: 3px 10px; margin-bottom: 12px; }
-      .hero-sub { font-size: 11px; margin-bottom: 16px; letter-spacing: 1px; }
-      .hero-stats { gap: 6px; margin-bottom: 16px; }
-      .stat-box { padding: 8px 12px; min-width: 60px; }
-      .stat-num { font-size: 18px; }
+      .hero { padding: 20px 16px 16px; }
+      .hero-badge { font-size: 10px; padding: 3px 10px; margin-bottom: 10px; }
+      .hero-sub { font-size: 11px; margin-bottom: 12px; letter-spacing: 1px; }
+      .hero-stats { gap: 6px; margin-bottom: 12px; }
+      .stat-box { padding: 7px 10px; min-width: 56px; }
+      .stat-num { font-size: 16px; }
       .stat-label { font-size: 9px; }
-      .hero-prompt { font-size: 11px; padding: 7px 12px; }
+      .hero-prompt { font-size: 11px; padding: 6px 10px; }
       /* topbar */
       .topbar { padding: 6px 12px; flex-wrap: wrap; gap: 6px; }
       .search-wrap { max-width: 100%; flex: 1; }
@@ -618,9 +623,15 @@
       .grid { grid-template-columns: 1fr; }
     }
 
-    @media (max-width: 380px) {
+    @media (max-width: 480px) {
+      /* hero ainda mais compacto */
       .hero-prompt { display: none; }
-      .hero-stats { grid-template-columns: 1fr 1fr; display: grid; }
+      .hero-stats { display: grid; grid-template-columns: 1fr 1fr; }
+      .hero-badge { display: none; }
+    }
+
+    @media (max-width: 360px) {
+      .hero-sub { display: none; }
     }
   </style>
 </head>
@@ -2626,7 +2637,7 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-name"><span class="hl">wisecort</span> · Matheus Corteletti</div>
-    <div class="footer-role">Criador &amp; Desenvolvedor</div>
+    <div class="footer-role">Criador &amp; DevOps</div>
     <div class="footer-links">
       <a href="https://matheuscorteletti.com.br" target="_blank">🌐 matheuscorteletti.com.br</a>
       <a href="https://github.com/wisecort" target="_blank">⌥ github/wisecort</a>
@@ -2648,19 +2659,29 @@
 
   // ── ALTURA DO STICKY HEADER ──────────────────────────
   const stickyEl = document.querySelector('.sticky-top');
+  const SCROLL_BUFFER = 12; // px extra abaixo do sticky
   function updateStickyHeight() {
-    const h = stickyEl.offsetHeight;
+    const h = stickyEl.getBoundingClientRect().height + SCROLL_BUFFER;
     document.documentElement.style.setProperty('--sticky-h', h + 'px');
   }
   updateStickyHeight();
-  window.addEventListener('resize', updateStickyHeight);
+  // ResizeObserver mantém --sticky-h sincronizado se o sticky mudar de altura (ex: mobile wrap)
+  if (window.ResizeObserver) {
+    new ResizeObserver(updateStickyHeight).observe(stickyEl);
+  } else {
+    window.addEventListener('resize', updateStickyHeight);
+  }
 
   // ── NAVEGAÇÃO ATIVA ──────────────────────────────────
   const sections  = document.querySelectorAll('section[id]');
   const navLinks  = document.querySelectorAll('nav a');
 
+  function getStickyH() {
+    return stickyEl.getBoundingClientRect().height + SCROLL_BUFFER;
+  }
+
   function updateNav() {
-    const offset = stickyEl.offsetHeight + 10;
+    const offset = getStickyH();
     let current = '';
     sections.forEach(sec => {
       if (sec.getBoundingClientRect().top <= offset) current = sec.id;
@@ -2673,8 +2694,7 @@
   function goto(id) {
     const target = document.getElementById(id);
     if (!target) return;
-    const offset = stickyEl.offsetHeight + 8;
-    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+    const top = target.getBoundingClientRect().top + window.scrollY - getStickyH();
     window.scrollTo({ top, behavior: 'smooth' });
   }
 
@@ -2688,8 +2708,8 @@
     });
   });
 
-  // Recalcula altura depois que JS injetou botões/badges no DOM
-  requestAnimationFrame(() => requestAnimationFrame(updateStickyHeight));
+  // Garante leitura correta após render completo (fontes, etc.)
+  window.addEventListener('load', updateStickyHeight);
 
   // ── SCROLL PROGRESS ──────────────────────────────────
   const progressBar = document.getElementById('scroll-progress');
