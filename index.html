@@ -513,6 +513,69 @@
     #back-top.visible { opacity: 1; transform: translateY(0); }
     #back-top:hover { color: var(--purple); border-color: var(--purple); }
 
+    /* ── FOOTER ── */
+    footer {
+      background: #050508;
+      border-top: 1px solid var(--border);
+      padding: 40px 32px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: .08;
+    }
+    .footer-inner { position: relative; z-index: 1; }
+    .footer-name {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .footer-name .hl { color: var(--cyan); text-shadow: 0 0 10px rgba(0,245,255,.4); }
+    .footer-role {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      border: 1px solid var(--border);
+      padding: 6px 16px;
+      border-radius: 6px;
+      transition: color .2s, border-color .2s, text-shadow .2s;
+    }
+    .footer-links a:hover {
+      color: var(--cyan);
+      border-color: var(--cyan);
+      text-shadow: 0 0 8px rgba(0,245,255,.4);
+    }
+    .footer-copy {
+      font-size: 11px;
+      color: #333355;
+    }
+    .footer-copy span { color: var(--pink); }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .grid-wide { grid-template-columns: 1fr; }
@@ -799,7 +862,8 @@
         <div class="card-header"><span class="dot dot-green"></span>chmod — Permissões Numéricas</div>
         <div class="card-body">
           <div class="callout info">
-            <strong>Formato:</strong> <code>rwxrwxrwx</code> → dono | grupo | outros
+            <strong>Formato:</strong> <code>rwxrwxrwx</code> → dono | grupo | outros &nbsp;|&nbsp;
+            r=4 &nbsp;w=2 &nbsp;x=1
           </div>
           <table class="cmd-table">
             <tr><td>chmod <span class="arg">755</span> <span class="arg">file</span></td><td>rwxr-xr-x (típico para executáveis)</td></tr>
@@ -813,6 +877,24 @@
             <tr><td>chmod <span class="arg">2755</span> <span class="arg">dir</span></td><td>SGID — herda grupo do diretório pai</td></tr>
             <tr><td>chmod <span class="arg">1777</span> <span class="arg">dir</span></td><td>Sticky bit — só dono pode apagar (ex: /tmp)</td></tr>
           </table>
+          <div class="term" style="margin-top:12px">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">chmod na prática</span>
+            </div>
+            <div class="term-body">
+<span class="prompt">$ </span><span class="cmd">ls -l script.sh</span><br>
+<span class="out">-rw-r--r-- 1 matheus devs 512 Mar 26 script.sh</span><br>
+<span class="cmt"># sem permissão de execução — vamos adicionar</span><br>
+<span class="prompt">$ </span><span class="cmd">chmod <span class="flag">+x</span> script.sh</span><br>
+<span class="prompt">$ </span><span class="cmd">ls -l script.sh</span><br>
+<span class="out">-rw<span class="hl">x</span>r-<span class="hl">x</span>r-<span class="hl">x</span> 1 matheus devs 512 Mar 26 script.sh</span><br>
+<span class="cmt"># ou numericamente: 755 = rwx r-x r-x</span><br>
+<span class="prompt">$ </span><span class="cmd">chmod <span class="arg">600</span> ~/.ssh/id_ed25519</span><br>
+<span class="out">-rw------- 1 matheus matheus 411 Mar 26 id_ed25519</span><br>
+<span class="cmt"># 600 = só o dono lê/escreve (obrigatório para chaves SSH)</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2206,6 +2288,19 @@
   <div id="no-results">Nenhum comando encontrado para "<span id="no-results-term"></span>"</div>
 
 </main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-name"><span class="hl">wisecort</span> · Matheus Corteletti</div>
+    <div class="footer-role">Criador &amp; Desenvolvedor</div>
+    <div class="footer-links">
+      <a href="https://matheuscorteletti.com.br" target="_blank">🌐 matheuscorteletti.com.br</a>
+      <a href="https://github.com/wisecort" target="_blank">⌥ github/wisecort</a>
+      <a href="https://github.com/wisecort/linux-cheat-sheet" target="_blank">★ linux-cheat-sheet</a>
+    </div>
+    <div class="footer-copy">Feito com <span>♥</span> e muito terminal aberto</div>
+  </div>
+</footer>
 
 <div id="scroll-progress"></div>
 <button id="back-top" title="Voltar ao topo">↑</button>
