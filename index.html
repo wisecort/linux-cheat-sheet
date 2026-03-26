@@ -440,6 +440,7 @@
   <a href="#kernel">Kernel</a>
   <a href="#devops">DevOps</a>
   <a href="#vim">Vim</a>
+  <a href="#nano">Nano</a>
   <a href="#regex">Regex</a>
 </nav>
 </div><!-- /sticky-top -->
@@ -1743,7 +1744,136 @@
 
 
   <!-- ══════════════════════════════════════
-       14. REGEX
+       14. NANO
+  ══════════════════════════════════════ -->
+  <section id="nano">
+    <div class="section-title"><span class="icon">📄</span>Nano</div>
+    <div class="section-desc">Editor de texto simples e direto no terminal — ideal para edições rápidas de configuração.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Abrir &amp; Sair</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>nano <span class="arg">arquivo</span></td><td>Abre (ou cria) um arquivo</td></tr>
+            <tr><td>nano <span class="flag">+10</span> <span class="arg">arquivo</span></td><td>Abre na linha 10</td></tr>
+            <tr><td>nano <span class="flag">-l</span> <span class="arg">arquivo</span></td><td>Exibe número de linhas</td></tr>
+            <tr><td>nano <span class="flag">-v</span> <span class="arg">arquivo</span></td><td>Modo somente-leitura (view)</td></tr>
+            <tr><td>nano <span class="flag">-B</span> <span class="arg">arquivo</span></td><td>Cria backup (.orig) antes de salvar</td></tr>
+            <tr><td>Ctrl+X</td><td>Sair (pede confirmação se houver mudança)</td></tr>
+            <tr><td>Ctrl+O</td><td>Salvar (write Out) — confirma com Enter</td></tr>
+            <tr><td>Ctrl+S</td><td>Salvar sem sair (versões recentes)</td></tr>
+          </table>
+          <div class="callout tip" style="margin-top:12px">
+            <strong>Dica:</strong> Os atalhos aparecem na barra inferior. <code>^</code> significa <code>Ctrl</code> e <code>M-</code> significa <code>Alt</code>.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>Navegação</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>Ctrl+A / Ctrl+E</td><td>Início / final da linha</td></tr>
+            <tr><td>Ctrl+Y / Ctrl+V</td><td>Página anterior / próxima</td></tr>
+            <tr><td>Ctrl+↑ / Ctrl+↓</td><td>Bloco anterior / próximo</td></tr>
+            <tr><td>Alt+\ / Alt+/</td><td>Início / final do arquivo</td></tr>
+            <tr><td>Alt+G</td><td>Vai para linha específica</td></tr>
+            <tr><td>Alt+]</td><td>Pula para o bracket correspondente</td></tr>
+            <tr><td>Ctrl+C</td><td>Exibe a posição atual do cursor (linha/coluna)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>Edição</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>Ctrl+K</td><td>Recorta a linha inteira (cut)</td></tr>
+            <tr><td>Ctrl+U</td><td>Cola a última linha recortada (uncut)</td></tr>
+            <tr><td>Alt+6</td><td>Copia a linha sem recortar</td></tr>
+            <tr><td>Ctrl+K (seleção)</td><td>Recorta o texto selecionado</td></tr>
+            <tr><td>Alt+A</td><td>Inicia seleção de bloco (mark set)</td></tr>
+            <tr><td>Ctrl+]</td><td>Auto-indenta a linha atual</td></tr>
+            <tr><td>Alt+U</td><td>Desfaz (undo)</td></tr>
+            <tr><td>Alt+E</td><td>Refaz (redo)</td></tr>
+            <tr><td>Tab</td><td>Indenta / auto-completa (se habilitado)</td></tr>
+            <tr><td>Ctrl+T</td><td>Verifica ortografia (se spell instalado)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-purple"></span>Busca &amp; Substituição</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>Ctrl+W</td><td>Busca (where is)</td></tr>
+            <tr><td>Ctrl+W → Ctrl+R</td><td>Busca e substitui</td></tr>
+            <tr><td>Alt+W</td><td>Repete a última busca</td></tr>
+            <tr><td>Alt+R</td><td>Ativa busca com regex</td></tr>
+            <tr><td>Alt+C</td><td>Ativa/desativa case-sensitive na busca</td></tr>
+            <tr><td>Alt+B</td><td>Busca para trás</td></tr>
+          </table>
+          <div class="term" style="margin-top:12px">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">nano workflow</span>
+            </div>
+            <div class="term-body">
+<span class="prompt">$ </span><span class="cmd">nano /etc/ssh/sshd_config</span><br>
+<span class="cmt"># Ctrl+W para buscar</span><br>
+<span class="hl">Search: </span><span class="cmd">PermitRootLogin</span>  <span class="cmt">Enter</span><br>
+<span class="out">PermitRootLogin yes</span><br>
+<span class="cmt"># Edita: muda "yes" para "no"</span><br>
+<span class="cmt"># Ctrl+O → Enter para salvar</span><br>
+<span class="cmt"># Ctrl+X para sair</span><br>
+<span class="prompt">$ </span><span class="cmd">systemctl restart sshd</span><br>
+<span class="out">$  </span><span class="cmt"># pronto, root login desativado</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-cyan"></span>~/.nanorc — Configuração</div>
+        <div class="card-body">
+          <div class="term">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">~/.nanorc</span>
+            </div>
+            <div class="term-body">
+<span class="cmt"># Mostra números de linha</span><br>
+<span class="cmd">set linenumbers</span><br>
+<br>
+<span class="cmt"># Indentação automática</span><br>
+<span class="cmd">set autoindent</span><br>
+<br>
+<span class="cmt"># Tabs viram espaços (tamanho 2)</span><br>
+<span class="cmd">set tabsize 2</span><br>
+<span class="cmd">set tabstospaces</span><br>
+<br>
+<span class="cmt"># Mouse habilitado</span><br>
+<span class="cmd">set mouse</span><br>
+<br>
+<span class="cmt"># Syntax highlighting para arquivos comuns</span><br>
+<span class="cmd">include "/usr/share/nano/*.nanorc"</span><br>
+<br>
+<span class="cmt"># Sem barra de ajuda (mais espaço)</span><br>
+<span class="cmd">set nohelp</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       15. REGEX
   ══════════════════════════════════════ -->
   <section id="regex">
     <div class="section-title"><span class="icon">🔎</span>Regex — Expressões Regulares</div>
