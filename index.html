@@ -36,34 +36,142 @@
       line-height: 1.6;
     }
 
-    /* ── HEADER ── */
+    /* ── STICKY WRAPPER ── */
     .sticky-top {
       position: sticky;
       top: 0;
       z-index: 100;
     }
-    header {
-      background: #13131a; /* tokyo night darker */
+
+    /* ── HERO HEADER ── */
+    .hero {
+      background:
+        linear-gradient(135deg, #0d0e1a 0%, #1a1b26 50%, #1e2030 100%);
       border-bottom: 1px solid var(--border);
-      padding: 20px 32px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
+      padding: 52px 32px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
     }
-    .logo {
+    /* grade animada de fundo */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: .18;
+      animation: gridpan 20s linear infinite;
+    }
+    @keyframes gridpan {
+      from { background-position: 0 0; }
+      to   { background-position: 40px 40px; }
+    }
+    .hero-inner { position: relative; z-index: 1; }
+
+    /* badge */
+    .hero-badge {
+      display: inline-block;
       font-family: var(--font-mono);
-      font-size: 20px;
-      color: var(--green);
+      font-size: 11px;
       font-weight: 700;
-      white-space: nowrap;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--green);
+      background: rgba(158, 206, 106, .1);
+      border: 1px solid rgba(158, 206, 106, .3);
+      border-radius: 20px;
+      padding: 4px 14px;
+      margin-bottom: 20px;
     }
-    .logo span { color: var(--muted); }
-    .header-sub {
-      font-size: 12px;
+
+    /* título principal */
+    .hero-title {
+      font-family: var(--font-mono);
+      font-size: clamp(26px, 5vw, 52px);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+    .hero-title .hl-blue   { color: var(--blue); }
+    .hero-title .hl-green  { color: var(--green); }
+    .hero-title .hl-purple { color: var(--purple); }
+
+    .hero-sub {
+      font-size: 13px;
       color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
     }
-    .header-right {
-      margin-left: auto;
+
+    /* stats */
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .stat-box {
+      background: rgba(122, 162, 247, .07);
+      border: 1px solid rgba(122, 162, 247, .2);
+      border-radius: 8px;
+      padding: 12px 22px;
+      min-width: 90px;
+    }
+    .stat-num {
+      font-family: var(--font-mono);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--blue);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    /* prompt simulado */
+    .hero-prompt {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 18px;
+    }
+    .hero-prompt .p-user   { color: var(--orange); }
+    .hero-prompt .p-at     { color: var(--muted); }
+    .hero-prompt .p-host   { color: var(--blue); }
+    .hero-prompt .p-sep    { color: var(--muted); }
+    .hero-prompt .p-path   { color: var(--cyan); }
+    .hero-prompt .p-dollar { color: var(--green); margin: 0 8px; }
+    .hero-prompt .p-cmd    { color: var(--text); }
+    .hero-prompt .p-cursor {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: var(--green);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink .9s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* topbar (busca + gh link) */
+    .topbar {
+      background: #13131a;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 32px;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -75,6 +183,7 @@
       border: 1px solid var(--border);
       padding: 4px 10px;
       border-radius: 4px;
+      white-space: nowrap;
       transition: color .2s, border-color .2s;
     }
     .gh-link:hover { color: var(--green); border-color: var(--green); }
@@ -398,8 +507,11 @@
       .grid-wide { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
-      header { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
-      .search-wrap { max-width: 100%; order: 3; flex: 0 0 100%; }
+      .hero { padding: 36px 16px 28px; }
+      .hero-stats { gap: 8px; }
+      .stat-box { padding: 10px 14px; min-width: 70px; }
+      .topbar { padding: 8px 16px; flex-wrap: wrap; gap: 8px; }
+      .search-wrap { max-width: 100%; flex: 1; }
       nav { padding: 0 8px; }
       main { padding: 20px 16px 60px; }
       .grid { grid-template-columns: 1fr; }
@@ -408,22 +520,52 @@
 </head>
 <body>
 
-<div class="sticky-top">
-<!-- HEADER -->
-<header>
-  <div>
-    <div class="logo">$ linux<span>_</span>cheatsheet</div>
-    <div class="header-sub">Referência rápida · wisecort</div>
+<!-- HERO (não sticky — fica acima do sticky wrapper) -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Linux Cheat Sheet</div>
+    <div class="hero-title">
+      <span class="hl-blue">$</span> man <span class="hl-green">linux</span><span class="hl-purple">_commands</span>
+    </div>
+    <div class="hero-sub">Referência rápida de sobrevivência no terminal · wisecort</div>
+
+    <div class="hero-stats">
+      <div class="stat-box">
+        <div class="stat-num" id="stat-sections">15</div>
+        <div class="stat-label">Seções</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="stat-cmds">500+</div>
+        <div class="stat-label">Comandos</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Editores</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" style="color:var(--green)">100%</div>
+        <div class="stat-label">Free</div>
+      </div>
+    </div>
+
+    <div class="hero-prompt">
+      <span class="p-user">wisecort</span><span class="p-at">@</span><span class="p-host">linux-desktop</span><span class="p-sep">:</span><span class="p-path">~</span><span class="p-dollar">$</span>
+      <span class="p-cmd">man linux &amp;&amp; echo 'Bora aprender'</span>
+      <span class="p-cursor"></span>
+    </div>
   </div>
+</div>
+
+<div class="sticky-top">
+<!-- TOPBAR (busca + link) -->
+<div class="topbar">
   <div class="search-wrap">
     <span class="search-icon">⌕</span>
     <input class="search-input" id="search" type="text" placeholder="Buscar comandos…" autocomplete="off" />
     <span class="search-count" id="search-count"></span>
   </div>
-  <div class="header-right">
-    <a class="gh-link" href="https://github.com/wisecort/linux-cheat-sheet" target="_blank">github/wisecort</a>
-  </div>
-</header>
+  <a class="gh-link" href="https://github.com/wisecort/linux-cheat-sheet" target="_blank">github/wisecort</a>
+</div>
 
 <!-- NAV -->
 <nav id="main-nav">
@@ -2058,6 +2200,12 @@
 <button id="back-top" title="Voltar ao topo">↑</button>
 
 <script>
+  // ── STATS DINÂMICOS ──────────────────────────────────
+  const totalSections = document.querySelectorAll('section[id]').length;
+  const totalCmds     = document.querySelectorAll('.cmd-table td:first-child').length;
+  document.getElementById('stat-sections').textContent = totalSections;
+  document.getElementById('stat-cmds').textContent     = totalCmds + '+';
+
   // ── ALTURA DO STICKY HEADER ──────────────────────────
   const stickyEl = document.querySelector('.sticky-top');
   function updateStickyHeight() {
