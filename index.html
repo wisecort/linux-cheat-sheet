@@ -37,6 +37,11 @@
     }
 
     /* ── HEADER ── */
+    .sticky-top {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
     header {
       background: #13131a; /* tokyo night darker */
       border-bottom: 1px solid var(--border);
@@ -44,9 +49,6 @@
       display: flex;
       align-items: center;
       gap: 16px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
     }
     .logo {
       font-family: var(--font-mono);
@@ -86,9 +88,6 @@
       gap: 0;
       overflow-x: auto;
       scrollbar-width: none;
-      position: sticky;
-      top: 65px;
-      z-index: 99;
     }
     nav::-webkit-scrollbar { display: none; }
     nav a {
@@ -113,7 +112,7 @@
     /* ── SECTION ── */
     section {
       margin-bottom: 64px;
-      scroll-margin-top: 110px;
+      scroll-margin-top: var(--sticky-h, 110px);
     }
     .section-title {
       font-size: 22px;
@@ -409,6 +408,7 @@
 </head>
 <body>
 
+<div class="sticky-top">
 <!-- HEADER -->
 <header>
   <div>
@@ -442,6 +442,7 @@
   <a href="#vim">Vim</a>
   <a href="#regex">Regex</a>
 </nav>
+</div><!-- /sticky-top -->
 
 <main>
 
@@ -1927,14 +1928,24 @@
 <button id="back-top" title="Voltar ao topo">↑</button>
 
 <script>
+  // ── ALTURA DO STICKY HEADER ──────────────────────────
+  const stickyEl = document.querySelector('.sticky-top');
+  function updateStickyHeight() {
+    const h = stickyEl.offsetHeight;
+    document.documentElement.style.setProperty('--sticky-h', h + 'px');
+  }
+  updateStickyHeight();
+  window.addEventListener('resize', updateStickyHeight);
+
   // ── NAVEGAÇÃO ATIVA ──────────────────────────────────
   const sections  = document.querySelectorAll('section[id]');
   const navLinks  = document.querySelectorAll('nav a');
 
   function updateNav() {
+    const offset = stickyEl.offsetHeight + 10;
     let current = '';
     sections.forEach(sec => {
-      if (sec.getBoundingClientRect().top <= 130) current = sec.id;
+      if (sec.getBoundingClientRect().top <= offset) current = sec.id;
     });
     navLinks.forEach(a => {
       a.classList.toggle('active', a.getAttribute('href') === '#' + current);
@@ -2066,9 +2077,9 @@
   applyFavDots();
 
   // ── BUSCA EM TEMPO REAL ───────────────────────────────
-  const searchInput  = document.getElementById('search');
-  const searchCount  = document.getElementById('search-count');
-  const noResults    = document.getElementById('no-results');
+  const searchInput   = document.getElementById('search');
+  const searchCount   = document.getElementById('search-count');
+  const noResults     = document.getElementById('no-results');
   const noResultsTerm = document.getElementById('no-results-term');
 
   searchInput.addEventListener('input', () => {
@@ -2085,8 +2096,7 @@
           secVisible++;
           return;
         }
-        const text = card.textContent.toLowerCase();
-        if (text.includes(q)) {
+        if (card.textContent.toLowerCase().includes(q)) {
           card.classList.remove('hidden');
           secVisible++;
         } else {
@@ -2094,6 +2104,8 @@
         }
       });
 
+      // Oculta a seção inteira se não tiver nenhum card visível
+      sec.style.display = (q && secVisible === 0) ? 'none' : '';
       totalVisible += secVisible;
     });
 
