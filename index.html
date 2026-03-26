@@ -305,9 +305,10 @@
       font-family: var(--font-mono);
       font-size: 12px;
       color: var(--green);
-      white-space: nowrap;
+      white-space: normal;
+      word-break: break-word;
       padding-right: 12px;
-      width: 1%;
+      width: 55%;
     }
     .cmd-table td:last-child {
       font-size: 12px;
@@ -2115,13 +2116,12 @@
         <div class="card-header"><span class="dot dot-blue"></span>Docker one-liners</div>
         <div class="card-body">
           <table class="cmd-table">
-            <tr><td>docker ps -q | xargs docker inspect --format '{{.Name}} {{.State.Status}}'</td><td>Nome e status de todos os containers</td></tr>
-            <tr><td>docker stats --no-stream --format "{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"</td><td>Snapshot de CPU/RAM sem stream</td></tr>
-            <tr><td>docker ps -q | xargs -I{} docker logs --tail 10 {}</td><td>Últimas 10 linhas de log de cada container</td></tr>
-            <tr><td>docker images --format "{{.Repository}}:{{.Tag}}\t{{.Size}}" | sort -k2 -h</td><td>Imagens ordenadas por tamanho</td></tr>
-            <tr><td>docker network ls --format "{{.Name}}\t{{.Driver}}"</td><td>Redes e seus drivers</td></tr>
-            <tr><td>docker volume ls -q | xargs docker volume inspect --format '{{.Name}} → {{.Mountpoint}}'</td><td>Volumes e seus caminhos no host</td></tr>
-            <tr><td>docker ps -a --format "{{.Names}}" | xargs -I{} sh -c 'docker inspect {} | jq ".[0].HostConfig.RestartPolicy"'</td><td>Política de restart de cada container</td></tr>
+            <tr><td>docker stats --no-stream</td><td>Snapshot de CPU/RAM de todos os containers</td></tr>
+            <tr><td>docker ps -q | xargs docker logs --tail 10</td><td>Últimas 10 linhas de log de cada container</td></tr>
+            <tr><td>docker images | sort -k7 -h</td><td>Imagens ordenadas por tamanho</td></tr>
+            <tr><td>docker network ls</td><td>Redes e seus drivers</td></tr>
+            <tr><td>docker volume ls -q | xargs docker volume inspect</td><td>Detalhes de todos os volumes</td></tr>
+            <tr><td>docker inspect --format '{{.Name}} {{.State.Status}}' $(docker ps -q)</td><td>Nome e status de cada container</td></tr>
           </table>
         </div>
       </div>
@@ -2817,7 +2817,7 @@
             <tr><td>ss <span class="flag">-tnp</span> | grep <span class="arg">ESTAB</span></td><td>Conexões TCP ativas com PID</td></tr>
             <tr><td>tcpdump <span class="flag">-i eth0 -nn -c 50</span></td><td>Captura 50 pacotes</td></tr>
             <tr><td>dig <span class="arg">@8.8.8.8 example.com</span></td><td>Resolve DNS via servidor externo</td></tr>
-            <tr><td>curl <span class="flag">-w "%{time_total}\n" -o /dev/null -s</span> <span class="arg">http://host</span></td><td>Latência HTTP</td></tr>
+            <tr><td>curl <span class="flag">-o /dev/null -s -w</span> <span class="arg">"%{time_total}\n" http://host</span></td><td>Latência HTTP de um endpoint</td></tr>
           </table>
         </div>
       </div>
