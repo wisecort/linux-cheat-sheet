@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Linux Cheat Sheet · wisecort</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0f'/%3E%3Ctext x='5' y='23' font-family='monospace' font-size='20' font-weight='bold' fill='%2300f5ff'%3E%24_%3C/text%3E%3C/svg%3E">
   <style>
     :root {
       /* Cyberpunk — neon magenta/ciano no preto puro */
@@ -212,7 +213,13 @@
       transition: color .2s, border-color .2s;
     }
     nav a:hover { color: var(--text); }
-    nav a.active { color: var(--cyan); border-bottom-color: var(--cyan); text-shadow: 0 0 10px rgba(0,245,255,.5); }
+    nav a.active {
+      color: var(--cyan);
+      border-bottom-color: var(--cyan);
+      text-shadow: 0 0 10px rgba(0,245,255,.5);
+      background: rgba(0, 245, 255, .06);
+      border-radius: 4px 4px 0 0;
+    }
 
     /* ── MAIN LAYOUT ── */
     main {
@@ -259,6 +266,11 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       overflow: hidden;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .card:hover {
+      border-color: rgba(0, 245, 255, .35);
+      box-shadow: 0 0 16px rgba(0, 245, 255, .08), 0 0 1px rgba(255, 0, 170, .2);
     }
     .card-header {
       padding: 10px 44px 10px 16px;
@@ -303,7 +315,7 @@
     }
     .cmd-table .arg  { color: var(--blue); }
     .cmd-table .flag { color: var(--orange); }
-    .cmd-table .cmt  { color: #555; font-style: italic; }
+    .cmd-table .cmt  { color: #6868a0; font-style: italic; }
     .cmd-table .key  { color: var(--yellow); }
 
     /* ── TERMINAL BLOCK ── */
@@ -341,7 +353,7 @@
     .term-body .hl     { color: var(--yellow); }
     .term-body .arg    { color: var(--blue); }
     .term-body .flag   { color: var(--orange); }
-    .term-body .cmt    { color: #555; }
+    .term-body .cmt    { color: #6868a0; }
 
     /* ── BADGE ── */
     .badge {
