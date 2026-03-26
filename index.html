@@ -581,14 +581,27 @@
       .grid-wide { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
-      .hero { padding: 36px 16px 28px; }
-      .hero-stats { gap: 8px; }
-      .stat-box { padding: 10px 14px; min-width: 70px; }
-      .topbar { padding: 8px 16px; flex-wrap: wrap; gap: 8px; }
+      /* hero compacto */
+      .hero { padding: 24px 16px 20px; }
+      .hero-badge { font-size: 10px; padding: 3px 10px; margin-bottom: 12px; }
+      .hero-sub { font-size: 11px; margin-bottom: 16px; letter-spacing: 1px; }
+      .hero-stats { gap: 6px; margin-bottom: 16px; }
+      .stat-box { padding: 8px 12px; min-width: 60px; }
+      .stat-num { font-size: 18px; }
+      .stat-label { font-size: 9px; }
+      .hero-prompt { font-size: 11px; padding: 7px 12px; }
+      /* topbar */
+      .topbar { padding: 6px 12px; flex-wrap: wrap; gap: 6px; }
       .search-wrap { max-width: 100%; flex: 1; }
+      /* nav e main */
       nav { padding: 0 8px; }
       main { padding: 20px 16px 60px; }
       .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 380px) {
+      .hero-prompt { display: none; }
+      .hero-stats { grid-template-columns: 1fr 1fr; display: grid; }
     }
   </style>
 </head>
@@ -2337,10 +2350,14 @@
   }
 
   function goto(id) {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    const target = document.getElementById(id);
+    if (!target) return;
+    const offset = stickyEl.offsetHeight + 8;
+    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
   }
 
-  // Intercepta cliques no nav — previne pulo brusco do href
+  // Intercepta cliques no nav — scroll preciso sem pulo brusco
   navLinks.forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
@@ -2349,6 +2366,9 @@
       history.replaceState(null, '', '#' + id);
     });
   });
+
+  // Recalcula altura depois que JS injetou botões/badges no DOM
+  requestAnimationFrame(() => requestAnimationFrame(updateStickyHeight));
 
   // ── SCROLL PROGRESS ──────────────────────────────────
   const progressBar = document.getElementById('scroll-progress');
