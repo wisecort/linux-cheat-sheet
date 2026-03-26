@@ -263,12 +263,144 @@
     .callout.danger{ border-color: var(--red);    background: #2e1a20; }
     .callout strong { color: var(--text); }
 
+    /* ── SEARCH ── */
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      max-width: 280px;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px 6px 32px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: var(--font-sans);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { border-color: var(--purple); }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 13px;
+      pointer-events: none;
+    }
+    .search-count {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10px;
+      color: var(--muted);
+    }
+    #no-results {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .card.hidden { display: none !important; }
+    section.all-hidden > .grid,
+    section.all-hidden > .grid.grid-wide { opacity: .3; pointer-events: none; }
+
+    /* ── COPY BUTTON ── */
+    .copy-btn {
+      margin-left: auto;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      padding: 2px 7px;
+      cursor: pointer;
+      transition: color .15s, border-color .15s, background .15s;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { color: var(--text); border-color: var(--purple); }
+    .copy-btn.copied { color: var(--green); border-color: var(--green); background: #1e2e28; }
+
+    /* ── FAVORITES ── */
+    .fav-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      padding: 0 2px;
+      opacity: .35;
+      transition: opacity .2s, transform .15s;
+    }
+    .fav-btn:hover { opacity: .7; transform: scale(1.15); }
+    .fav-btn.active { opacity: 1; }
+    nav a .fav-dot {
+      display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--yellow);
+      margin-left: 4px;
+      vertical-align: middle;
+      margin-bottom: 2px;
+    }
+
+    /* ── SCROLL PROGRESS ── */
+    #scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--purple), var(--blue));
+      z-index: 9999;
+      transition: width .1s linear;
+    }
+
+    /* ── CMD COUNTER ── */
+    .section-title .cmd-count {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--muted);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2px 8px;
+    }
+
+    /* ── BACK TO TOP ── */
+    #back-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .2s, transform .2s, color .2s;
+      z-index: 200;
+    }
+    #back-top.visible { opacity: 1; transform: translateY(0); }
+    #back-top:hover { color: var(--purple); border-color: var(--purple); }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .grid-wide { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
-      header { padding: 14px 16px; }
+      header { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
+      .search-wrap { max-width: 100%; order: 3; flex: 0 0 100%; }
       nav { padding: 0 8px; }
       main { padding: 20px 16px 60px; }
       .grid { grid-template-columns: 1fr; }
@@ -283,8 +415,13 @@
     <div class="logo">$ linux<span>_</span>cheatsheet</div>
     <div class="header-sub">Referência rápida · wisecort</div>
   </div>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input class="search-input" id="search" type="text" placeholder="Buscar comandos…" autocomplete="off" />
+    <span class="search-count" id="search-count"></span>
+  </div>
   <div class="header-right">
-    <a class="gh-link" href="https://github.com/wisecort" target="_blank">github/wisecort</a>
+    <a class="gh-link" href="https://github.com/wisecort/linux-cheat-sheet" target="_blank">github/wisecort</a>
   </div>
 </header>
 
@@ -302,6 +439,8 @@
   <a href="#seguranca"     onclick="goto('seguranca')">Segurança</a>
   <a href="#kernel"        onclick="goto('kernel')">Kernel</a>
   <a href="#devops"        onclick="goto('devops')">DevOps</a>
+  <a href="#vim"           onclick="goto('vim')">Vim</a>
+  <a href="#regex"         onclick="goto('regex')">Regex</a>
 </nav>
 
 <main>
@@ -1468,30 +1607,495 @@
     </div>
   </section>
 
+  <!-- ══════════════════════════════════════
+       13. VIM / NEOVIM
+  ══════════════════════════════════════ -->
+  <section id="vim">
+    <div class="section-title"><span class="icon">📝</span>Vim / Neovim</div>
+    <div class="section-desc">Modos, navegação, edição, busca, buffers e atalhos essenciais.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Modos</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>i</td><td>Insert — insere antes do cursor</td></tr>
+            <tr><td>a</td><td>Insert — insere após o cursor</td></tr>
+            <tr><td>I</td><td>Insert no início da linha</td></tr>
+            <tr><td>A</td><td>Insert no final da linha</td></tr>
+            <tr><td>o / O</td><td>Nova linha abaixo / acima e entra em Insert</td></tr>
+            <tr><td>v</td><td>Visual — seleção por caractere</td></tr>
+            <tr><td>V</td><td>Visual Line — seleção por linha</td></tr>
+            <tr><td>Ctrl+v</td><td>Visual Block — seleção em bloco</td></tr>
+            <tr><td>Esc</td><td>Volta para Normal mode</td></tr>
+            <tr><td>:</td><td>Command mode</td></tr>
+            <tr><td>R</td><td>Replace mode — sobrescreve caracteres</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>Navegação</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>h j k l</td><td>Esquerda / baixo / cima / direita</td></tr>
+            <tr><td>w / b</td><td>Próxima / palavra anterior (início)</td></tr>
+            <tr><td>e</td><td>Final da palavra atual</td></tr>
+            <tr><td>0 / ^</td><td>Início da linha / primeiro char não-branco</td></tr>
+            <tr><td>$</td><td>Final da linha</td></tr>
+            <tr><td>gg / G</td><td>Início / final do arquivo</td></tr>
+            <tr><td><span class="arg">n</span>G</td><td>Vai para a linha n</td></tr>
+            <tr><td>Ctrl+d / Ctrl+u</td><td>Meia página para baixo / cima</td></tr>
+            <tr><td>Ctrl+f / Ctrl+b</td><td>Página inteira para baixo / cima</td></tr>
+            <tr><td>%</td><td>Pula para o bracket/paren correspondente</td></tr>
+            <tr><td>{ / }</td><td>Parágrafo anterior / próximo</td></tr>
+            <tr><td>f<span class="arg">x</span></td><td>Pula para o char x na linha</td></tr>
+            <tr><td>*</td><td>Busca a palavra sob o cursor</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>Edição</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>x</td><td>Apaga o caractere sob o cursor</td></tr>
+            <tr><td>dd</td><td>Apaga (recorta) a linha inteira</td></tr>
+            <tr><td>d<span class="arg">n</span>d</td><td>Apaga n linhas</td></tr>
+            <tr><td>dw / de</td><td>Apaga até o início / final da próxima palavra</td></tr>
+            <tr><td>D</td><td>Apaga do cursor até o final da linha</td></tr>
+            <tr><td>yy</td><td>Copia (yank) a linha inteira</td></tr>
+            <tr><td>y<span class="arg">n</span>y</td><td>Copia n linhas</td></tr>
+            <tr><td>p / P</td><td>Cola após / antes do cursor</td></tr>
+            <tr><td>u</td><td>Desfaz (undo)</td></tr>
+            <tr><td>Ctrl+r</td><td>Refaz (redo)</td></tr>
+            <tr><td>.</td><td>Repete o último comando de edição</td></tr>
+            <tr><td>ci<span class="arg">"</span></td><td>Change inside — apaga e entra em Insert dentro de ""</td></tr>
+            <tr><td>di<span class="arg">(</span></td><td>Delete inside — apaga conteúdo dentro de ()</td></tr>
+            <tr><td>=G</td><td>Auto-indenta do cursor até o final do arquivo</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-purple"></span>Busca, Substituição &amp; Arquivos</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>/<span class="arg">padrão</span></td><td>Busca para frente</td></tr>
+            <tr><td>?<span class="arg">padrão</span></td><td>Busca para trás</td></tr>
+            <tr><td>n / N</td><td>Próxima / ocorrência anterior</td></tr>
+            <tr><td>:s/<span class="arg">old</span>/<span class="arg">new</span>/g</td><td>Substitui na linha atual</td></tr>
+            <tr><td>:%s/<span class="arg">old</span>/<span class="arg">new</span>/g</td><td>Substitui em todo o arquivo</td></tr>
+            <tr><td>:%s/<span class="arg">old</span>/<span class="arg">new</span>/gc</td><td>Substitui com confirmação</td></tr>
+            <tr><td>:w</td><td>Salva o arquivo</td></tr>
+            <tr><td>:w <span class="arg">novo.txt</span></td><td>Salva como novo arquivo</td></tr>
+            <tr><td>:q</td><td>Fecha o buffer (sai)</td></tr>
+            <tr><td>:q!</td><td>Sai sem salvar (força)</td></tr>
+            <tr><td>:wq / ZZ</td><td>Salva e sai</td></tr>
+            <tr><td>:e <span class="arg">arquivo</span></td><td>Abre arquivo no buffer atual</td></tr>
+            <tr><td>:sp / :vsp</td><td>Split horizontal / vertical</td></tr>
+            <tr><td>Ctrl+w + setas</td><td>Navega entre splits</td></tr>
+            <tr><td>:bn / :bp</td><td>Próximo / buffer anterior</td></tr>
+            <tr><td>:ls</td><td>Lista buffers abertos</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="grid" style="margin-top:16px">
+      <div class="card" style="grid-column: 1 / -1">
+        <div class="card-header"><span class="dot dot-cyan"></span>Exemplo real — editar arquivo com Vim</div>
+        <div class="card-body">
+          <div class="term">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">vim workflow</span>
+            </div>
+            <div class="term-body">
+<span class="prompt">$ </span><span class="cmd">vim /etc/nginx/sites-available/default</span><br>
+<span class="cmt"># abre o arquivo — você está em Normal mode</span><br>
+<br>
+<span class="cmt"># Busca a linha com "server_name"</span><br>
+<span class="hl">/server_name</span>   <span class="cmt">Enter</span><br>
+<br>
+<span class="cmt"># Entra em Insert e edita</span><br>
+<span class="hl">A</span>               <span class="cmt"># vai para o final da linha e entra em Insert</span><br>
+<span class="cmd"> example.com www.example.com</span><br>
+<span class="hl">Esc</span><br>
+<br>
+<span class="cmt"># Substitui "80" por "443" em todo o arquivo</span><br>
+<span class="hl">:%s/listen 80/listen 443/g</span><br>
+<br>
+<span class="cmt"># Salva e sai</span><br>
+<span class="hl">:wq</span><br>
+<span class="prompt">$ </span><span class="cmd">nginx -t</span><br>
+<span class="out">nginx: configuration file /etc/nginx/nginx.conf test is successful</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       14. REGEX
+  ══════════════════════════════════════ -->
+  <section id="regex">
+    <div class="section-title"><span class="icon">🔎</span>Regex — Expressões Regulares</div>
+    <div class="section-desc">Metacaracteres, quantificadores, grupos e exemplos práticos com grep, sed e awk.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Metacaracteres Essenciais</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>.</td><td>Qualquer caractere (exceto newline)</td></tr>
+            <tr><td>^</td><td>Início da linha</td></tr>
+            <tr><td>$</td><td>Final da linha</td></tr>
+            <tr><td>\d</td><td>Dígito (0-9) — equivale a [0-9]</td></tr>
+            <tr><td>\w</td><td>Palavra (letra, dígito, _) — [a-zA-Z0-9_]</td></tr>
+            <tr><td>\s</td><td>Espaço em branco (espaço, tab, newline)</td></tr>
+            <tr><td>\D \W \S</td><td>Negação de \d \w \s respectivamente</td></tr>
+            <tr><td>[abc]</td><td>Um caractere: a, b ou c</td></tr>
+            <tr><td>[^abc]</td><td>Qualquer caractere exceto a, b, c</td></tr>
+            <tr><td>[a-z]</td><td>Range: letras minúsculas de a a z</td></tr>
+            <tr><td>\b</td><td>Boundary — limite de palavra</td></tr>
+            <tr><td>\</td><td>Escapa o próximo caractere especial</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>Quantificadores</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>*</td><td>Zero ou mais vezes (greedy)</td></tr>
+            <tr><td>+</td><td>Uma ou mais vezes</td></tr>
+            <tr><td>?</td><td>Zero ou uma vez (opcional)</td></tr>
+            <tr><td>{n}</td><td>Exatamente n vezes</td></tr>
+            <tr><td>{n,}</td><td>No mínimo n vezes</td></tr>
+            <tr><td>{n,m}</td><td>Entre n e m vezes</td></tr>
+            <tr><td>*? +? ??</td><td>Versão lazy (não-greedy) dos quantificadores</td></tr>
+          </table>
+          <br>
+          <table class="cmd-table">
+            <tr><td colspan="2" style="color:var(--muted);font-size:11px;padding-bottom:6px">Grupos &amp; Alternância</td></tr>
+            <tr><td>(abc)</td><td>Grupo de captura</td></tr>
+            <tr><td>(?:abc)</td><td>Grupo sem captura</td></tr>
+            <tr><td>(?P&lt;nome&gt;abc)</td><td>Grupo nomeado</td></tr>
+            <tr><td>a|b</td><td>Alternância — a ou b</td></tr>
+            <tr><td>\1 \2</td><td>Backreference — referencia grupo 1, 2…</td></tr>
+            <tr><td>(?=abc)</td><td>Lookahead — seguido de abc</td></tr>
+            <tr><td>(?!abc)</td><td>Negative lookahead — não seguido de abc</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>grep com Regex</div>
+        <div class="card-body">
+          <div class="term">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">grep examples</span>
+            </div>
+            <div class="term-body">
+<span class="cmt"># Linhas que começam com "ERROR"</span><br>
+<span class="prompt">$ </span><span class="cmd">grep <span class="flag">-E</span> <span class="arg">'^ERROR'</span> app.log</span><br>
+<span class="out">ERROR 2024-03-26 timeout on /api/users</span><br>
+<span class="out">ERROR 2024-03-26 db connection refused</span><br>
+<br>
+<span class="cmt"># IPs no arquivo de log</span><br>
+<span class="prompt">$ </span><span class="cmd">grep <span class="flag">-oE</span> <span class="arg">'\b([0-9]{1,3}\.){3}[0-9]{1,3}\b'</span> access.log</span><br>
+<span class="out">192.168.1.10</span><br>
+<span class="out">10.0.0.1</span><br>
+<br>
+<span class="cmt"># Linhas com 3 ou mais dígitos consecutivos</span><br>
+<span class="prompt">$ </span><span class="cmd">grep <span class="flag">-E</span> <span class="arg">'[0-9]{3,}'</span> arquivo.txt</span><br>
+<span class="out">porta: 8080</span><br>
+<span class="out">código: 404</span><br>
+<br>
+<span class="cmt"># Emails no arquivo</span><br>
+<span class="prompt">$ </span><span class="cmd">grep <span class="flag">-oE</span> <span class="arg">'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}'</span> contatos.txt</span><br>
+<span class="out">admin@example.com</span><br>
+<span class="out">dev@wisecort.dev</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-purple"></span>sed com Regex</div>
+        <div class="card-body">
+          <div class="term">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">sed examples</span>
+            </div>
+            <div class="term-body">
+<span class="cmt"># Remove espaços em branco no início/fim das linhas</span><br>
+<span class="prompt">$ </span><span class="cmd">sed <span class="arg">'s/^[[:space:]]*//;s/[[:space:]]*$//'</span> arquivo.txt</span><br>
+<br>
+<span class="cmt"># Substitui múltiplos espaços por um único</span><br>
+<span class="prompt">$ </span><span class="cmd">sed <span class="arg">'s/  */ /g'</span> arquivo.txt</span><br>
+<br>
+<span class="cmt"># Remove linhas em branco</span><br>
+<span class="prompt">$ </span><span class="cmd">sed <span class="arg">'/^$/d'</span> arquivo.txt</span><br>
+<br>
+<span class="cmt"># Adiciona # no início de cada linha (comenta)</span><br>
+<span class="prompt">$ </span><span class="cmd">sed <span class="arg">'s/^/# /'</span> script.sh</span><br>
+<br>
+<span class="cmt"># Extrai apenas a segunda coluna (separada por :)</span><br>
+<span class="prompt">$ </span><span class="cmd">sed <span class="arg">'s/[^:]*:\([^:]*\).*/\1/'</span> /etc/passwd</span><br>
+<span class="out">x</span><br>
+<span class="out">x</span><br>
+<br>
+<span class="cmt"># Substitui somente nas linhas 5 a 10</span><br>
+<span class="prompt">$ </span><span class="cmd">sed <span class="arg">'5,10s/foo/bar/g'</span> arquivo.txt</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-cyan"></span>awk com Regex</div>
+        <div class="card-body">
+          <div class="term">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">awk examples</span>
+            </div>
+            <div class="term-body">
+<span class="cmt"># Imprime linhas onde campo 3 &gt; 1000</span><br>
+<span class="prompt">$ </span><span class="cmd">awk <span class="arg">'$3 > 1000'</span> dados.csv</span><br>
+<br>
+<span class="cmt"># Soma coluna 2 e exibe total</span><br>
+<span class="prompt">$ </span><span class="cmd">awk <span class="arg">'{soma+=$2} END{print "Total:", soma}'</span> vendas.txt</span><br>
+<span class="out">Total: 48320</span><br>
+<br>
+<span class="cmt"># Filtra por regex e imprime campo específico</span><br>
+<span class="prompt">$ </span><span class="cmd">awk <span class="arg">'/^ERROR/{print $2, $NF}'</span> app.log</span><br>
+<span class="out">2024-03-26 timeout</span><br>
+<br>
+<span class="cmt"># Conta ocorrências por valor do campo 1</span><br>
+<span class="prompt">$ </span><span class="cmd">awk <span class="arg">'{count[$1]++} END{for(k in count) print count[k], k}'</span> access.log | sort -rn</span><br>
+<span class="out">142 192.168.1.10</span><br>
+<span class="out">87  10.0.0.1</span><br>
+<br>
+<span class="cmt"># Muda separador de campo</span><br>
+<span class="prompt">$ </span><span class="cmd">awk <span class="flag">-F:</span> <span class="arg">'{print $1, $3}'</span> /etc/passwd</span><br>
+<span class="out">root 0</span><br>
+<span class="out">daemon 1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-yellow"></span>Padrões Prontos (Cheat)</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>IPv4</td><td><code style="font-size:11px;color:var(--green)">(\d{1,3}\.){3}\d{1,3}</code></td></tr>
+            <tr><td>Email</td><td><code style="font-size:11px;color:var(--green)">[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}</code></td></tr>
+            <tr><td>URL</td><td><code style="font-size:11px;color:var(--green)">https?://[^\s/$.?#].[^\s]*</code></td></tr>
+            <tr><td>Data ISO</td><td><code style="font-size:11px;color:var(--green)">\d{4}-\d{2}-\d{2}</code></td></tr>
+            <tr><td>Hora</td><td><code style="font-size:11px;color:var(--green)">[0-2]\d:[0-5]\d(:[0-5]\d)?</code></td></tr>
+            <tr><td>CNPJ</td><td><code style="font-size:11px;color:var(--green)">\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}</code></td></tr>
+            <tr><td>CPF</td><td><code style="font-size:11px;color:var(--green)">\d{3}\.\d{3}\.\d{3}-\d{2}</code></td></tr>
+            <tr><td>CEP</td><td><code style="font-size:11px;color:var(--green)">\d{5}-?\d{3}</code></td></tr>
+            <tr><td>Hex color</td><td><code style="font-size:11px;color:var(--green)">#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})</code></td></tr>
+            <tr><td>Linha vazia</td><td><code style="font-size:11px;color:var(--green)">^$</code></td></tr>
+            <tr><td>Linha não-vazia</td><td><code style="font-size:11px;color:var(--green)">^.+$</code></td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="no-results">Nenhum comando encontrado para "<span id="no-results-term"></span>"</div>
+
 </main>
 
+<div id="scroll-progress"></div>
+<button id="back-top" title="Voltar ao topo">↑</button>
+
 <script>
-  // Navegação ativa via scroll
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('nav a');
+  // ── NAVEGAÇÃO ATIVA ──────────────────────────────────
+  const sections  = document.querySelectorAll('section[id]');
+  const navLinks  = document.querySelectorAll('nav a');
 
   function updateNav() {
     let current = '';
     sections.forEach(sec => {
-      const top = sec.getBoundingClientRect().top;
-      if (top <= 130) current = sec.id;
+      if (sec.getBoundingClientRect().top <= 130) current = sec.id;
     });
     navLinks.forEach(a => {
       a.classList.toggle('active', a.getAttribute('href') === '#' + current);
     });
   }
 
-  window.addEventListener('scroll', updateNav, { passive: true });
-  updateNav();
-
   function goto(id) {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   }
+
+  // ── SCROLL PROGRESS ──────────────────────────────────
+  const progressBar = document.getElementById('scroll-progress');
+  function updateProgress() {
+    const scrolled = window.scrollY;
+    const total    = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = total > 0 ? (scrolled / total * 100) + '%' : '0%';
+  }
+
+  // ── BACK TO TOP ──────────────────────────────────────
+  const backTop = document.getElementById('back-top');
+  backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  function updateBackTop() {
+    backTop.classList.toggle('visible', window.scrollY > 400);
+  }
+
+  window.addEventListener('scroll', () => {
+    updateNav();
+    updateProgress();
+    updateBackTop();
+  }, { passive: true });
+  updateNav();
+  updateProgress();
+
+  // ── COPIAR CONTEÚDO DO CARD ──────────────────────────
+  document.querySelectorAll('.card').forEach(card => {
+    const header = card.querySelector('.card-header');
+    if (!header) return;
+
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'copiar';
+    header.appendChild(btn);
+
+    btn.addEventListener('click', () => {
+      // Coleta texto das células de comando (primeira coluna da tabela)
+      const rows = card.querySelectorAll('.cmd-table td:first-child');
+      const termLines = card.querySelectorAll('.term-body');
+
+      let text = '';
+      if (rows.length) {
+        rows.forEach(td => { text += td.textContent.trim() + '\n'; });
+      } else if (termLines.length) {
+        termLines.forEach(el => { text += el.textContent.trim() + '\n'; });
+      } else {
+        text = card.textContent.trim();
+      }
+
+      navigator.clipboard.writeText(text.trim()).then(() => {
+        btn.textContent = 'copiado!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+
+  // ── CONTADOR DE COMANDOS POR SEÇÃO ───────────────────
+  sections.forEach(sec => {
+    const count = sec.querySelectorAll('.cmd-table td:first-child').length;
+    if (count === 0) return;
+    const title = sec.querySelector('.section-title');
+    if (!title) return;
+    const badge = document.createElement('span');
+    badge.className = 'cmd-count';
+    badge.textContent = count + ' cmds';
+    title.appendChild(badge);
+  });
+
+  // ── FAVORITAR SEÇÕES ─────────────────────────────────
+  const FAV_KEY = 'lcs_favs';
+  let favs = JSON.parse(localStorage.getItem(FAV_KEY) || '[]');
+
+  function saveFavs() { localStorage.setItem(FAV_KEY, JSON.stringify(favs)); }
+
+  function applyFavDots() {
+    navLinks.forEach(a => {
+      const id = (a.getAttribute('href') || '').replace('#', '');
+      const existing = a.querySelector('.fav-dot');
+      if (favs.includes(id)) {
+        if (!existing) { const d = document.createElement('span'); d.className = 'fav-dot'; a.appendChild(d); }
+      } else {
+        if (existing) existing.remove();
+      }
+    });
+  }
+
+  sections.forEach(sec => {
+    const title = sec.querySelector('.section-title');
+    if (!title) return;
+    const btn = document.createElement('button');
+    btn.className = 'fav-btn';
+    btn.title = 'Favoritar seção';
+    btn.textContent = '★';
+    if (favs.includes(sec.id)) btn.classList.add('active');
+    btn.addEventListener('click', () => {
+      if (favs.includes(sec.id)) {
+        favs = favs.filter(f => f !== sec.id);
+        btn.classList.remove('active');
+      } else {
+        favs.push(sec.id);
+        btn.classList.add('active');
+      }
+      saveFavs();
+      applyFavDots();
+    });
+    // Insere o botão antes do cmd-count se existir
+    const counter = title.querySelector('.cmd-count');
+    title.insertBefore(btn, counter || null);
+  });
+  applyFavDots();
+
+  // ── BUSCA EM TEMPO REAL ───────────────────────────────
+  const searchInput  = document.getElementById('search');
+  const searchCount  = document.getElementById('search-count');
+  const noResults    = document.getElementById('no-results');
+  const noResultsTerm = document.getElementById('no-results-term');
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    let totalVisible = 0;
+
+    sections.forEach(sec => {
+      const cards = sec.querySelectorAll('.card');
+      let secVisible = 0;
+
+      cards.forEach(card => {
+        if (!q) {
+          card.classList.remove('hidden');
+          secVisible++;
+          return;
+        }
+        const text = card.textContent.toLowerCase();
+        if (text.includes(q)) {
+          card.classList.remove('hidden');
+          secVisible++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      totalVisible += secVisible;
+    });
+
+    if (q) {
+      searchCount.textContent = totalVisible > 0 ? totalVisible + ' cards' : '';
+      noResults.style.display = totalVisible === 0 ? 'block' : 'none';
+      noResultsTerm.textContent = q;
+    } else {
+      searchCount.textContent = '';
+      noResults.style.display = 'none';
+    }
+  });
 </script>
 
 </body>
