@@ -6,22 +6,22 @@
   <title>Linux Cheat Sheet · wisecort</title>
   <style>
     :root {
-      /* Catppuccin Mocha */
-      --bg:     #1e1e2e; /* base    */
-      --bg2:    #181825; /* mantle  */
-      --bg3:    #313244; /* surface0*/
-      --border: #45475a; /* surface1*/
-      --text:   #cdd6f4; /* text    */
-      --muted:  #6c7086; /* overlay0*/
-      --green:  #a6e3a1; /* green   */
-      --blue:   #89b4fa; /* blue    */
-      --orange: #fab387; /* peach   */
-      --red:    #f38ba8; /* red     */
-      --purple: #cba6f7; /* mauve   */
-      --yellow: #f9e2af; /* yellow  */
-      --cyan:   #89dceb; /* sky     */
-      --teal:   #94e2d5; /* teal    */
-      --pink:   #f5c2e7; /* pink    */
+      /* Tokyo Night */
+      --bg:     #1a1b26; /* background       */
+      --bg2:    #16161e; /* background dark  */
+      --bg3:    #292e42; /* highlight        */
+      --border: #3b4261; /* border           */
+      --text:   #c0caf5; /* foreground       */
+      --muted:  #565f89; /* comments         */
+      --green:  #9ece6a; /* green            */
+      --blue:   #7aa2f7; /* blue             */
+      --orange: #ff9e64; /* orange           */
+      --red:    #f7768e; /* red              */
+      --purple: #bb9af7; /* purple           */
+      --yellow: #e0af68; /* yellow           */
+      --cyan:   #7dcfff; /* cyan             */
+      --teal:   #2ac3de; /* teal             */
+      --pink:   #ff007c; /* magenta          */
       --font-mono: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
       --font-sans: 'Segoe UI', system-ui, sans-serif;
     }
@@ -38,7 +38,7 @@
 
     /* ── HEADER ── */
     header {
-      background: #11111b; /* crust */
+      background: #13131a; /* tokyo night darker */
       border-bottom: 1px solid var(--border);
       padding: 20px 32px;
       display: flex;
@@ -79,7 +79,7 @@
 
     /* ── NAV ── */
     nav {
-      background: #181825; /* mantle */
+      background: #13131a; /* tokyo night darker */
       border-bottom: 1px solid var(--border);
       padding: 0 32px;
       display: flex;
@@ -197,14 +197,14 @@
 
     /* ── TERMINAL BLOCK ── */
     .term {
-      background: #11111b; /* crust */
+      background: #13131a; /* tokyo night darker */
       border: 1px solid var(--border);
       border-radius: 8px;
       overflow: hidden;
       margin-bottom: 16px;
     }
     .term-bar {
-      background: #181825; /* mantle */
+      background: #1a1b26; /* tokyo night base */
       padding: 8px 12px;
       display: flex;
       align-items: center;
@@ -242,10 +242,10 @@
       text-transform: uppercase;
       letter-spacing: .4px;
     }
-    .badge-basic        { background: #1e3a2e; color: var(--green); }
-    .badge-intermediate { background: #3a2620; color: var(--orange); }
-    .badge-advanced     { background: #3a1f2a; color: var(--red); }
-    .badge-expert       { background: #2b2040; color: var(--purple); }
+    .badge-basic        { background: #1e2d1e; color: var(--green); }
+    .badge-intermediate { background: #2d2010; color: var(--orange); }
+    .badge-advanced     { background: #2d1520; color: var(--red); }
+    .badge-expert       { background: #1e1a30; color: var(--purple); }
 
     /* ── CALLOUT ── */
     .callout {
@@ -257,10 +257,10 @@
       color: var(--muted);
       margin-bottom: 16px;
     }
-    .callout.info  { border-color: var(--blue);   background: #1e253e; }
-    .callout.tip   { border-color: var(--green);  background: #1e2e28; }
-    .callout.warn  { border-color: var(--orange); background: #2e2318; }
-    .callout.danger{ border-color: var(--red);    background: #2e1a20; }
+    .callout.info  { border-color: var(--blue);   background: #1c2340; }
+    .callout.tip   { border-color: var(--green);  background: #1a2418; }
+    .callout.warn  { border-color: var(--orange); background: #261d10; }
+    .callout.danger{ border-color: var(--red);    background: #261018; }
     .callout strong { color: var(--text); }
 
     /* ── SEARCH ── */
@@ -356,7 +356,7 @@
       top: 0; left: 0;
       height: 3px;
       width: 0%;
-      background: linear-gradient(90deg, var(--purple), var(--blue));
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
       z-index: 9999;
       transition: width .1s linear;
     }
@@ -427,20 +427,20 @@
 
 <!-- NAV -->
 <nav id="main-nav">
-  <a href="#fundamentos"   onclick="goto('fundamentos')">Fundamentos</a>
-  <a href="#arquivos"      onclick="goto('arquivos')">Arquivos</a>
-  <a href="#permissoes"    onclick="goto('permissoes')">Permissões</a>
-  <a href="#processos"     onclick="goto('processos')">Processos</a>
-  <a href="#redes"         onclick="goto('redes')">Redes</a>
-  <a href="#usuarios"      onclick="goto('usuarios')">Usuários</a>
-  <a href="#scripting"     onclick="goto('scripting')">Shell Script</a>
-  <a href="#storage"       onclick="goto('storage')">Storage</a>
-  <a href="#systemd"       onclick="goto('systemd')">systemd</a>
-  <a href="#seguranca"     onclick="goto('seguranca')">Segurança</a>
-  <a href="#kernel"        onclick="goto('kernel')">Kernel</a>
-  <a href="#devops"        onclick="goto('devops')">DevOps</a>
-  <a href="#vim"           onclick="goto('vim')">Vim</a>
-  <a href="#regex"         onclick="goto('regex')">Regex</a>
+  <a href="#fundamentos">Fundamentos</a>
+  <a href="#arquivos">Arquivos</a>
+  <a href="#permissoes">Permissões</a>
+  <a href="#processos">Processos</a>
+  <a href="#redes">Redes</a>
+  <a href="#usuarios">Usuários</a>
+  <a href="#scripting">Shell Script</a>
+  <a href="#storage">Storage</a>
+  <a href="#systemd">systemd</a>
+  <a href="#seguranca">Segurança</a>
+  <a href="#kernel">Kernel</a>
+  <a href="#devops">DevOps</a>
+  <a href="#vim">Vim</a>
+  <a href="#regex">Regex</a>
 </nav>
 
 <main>
@@ -1944,6 +1944,16 @@
   function goto(id) {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   }
+
+  // Intercepta cliques no nav — previne pulo brusco do href
+  navLinks.forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const id = a.getAttribute('href').replace('#', '');
+      goto(id);
+      history.replaceState(null, '', '#' + id);
+    });
+  });
 
   // ── SCROLL PROGRESS ──────────────────────────────────
   const progressBar = document.getElementById('scroll-progress');
