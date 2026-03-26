@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linux Cheat Sheet · wisecort</title>
+  <style>
+    :root {
+      /* Catppuccin Mocha */
+      --bg:     #1e1e2e; /* base    */
+      --bg2:    #181825; /* mantle  */
+      --bg3:    #313244; /* surface0*/
+      --border: #45475a; /* surface1*/
+      --text:   #cdd6f4; /* text    */
+      --muted:  #6c7086; /* overlay0*/
+      --green:  #a6e3a1; /* green   */
+      --blue:   #89b4fa; /* blue    */
+      --orange: #fab387; /* peach   */
+      --red:    #f38ba8; /* red     */
+      --purple: #cba6f7; /* mauve   */
+      --yellow: #f9e2af; /* yellow  */
+      --cyan:   #89dceb; /* sky     */
+      --teal:   #94e2d5; /* teal    */
+      --pink:   #f5c2e7; /* pink    */
+      --font-mono: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      --font-sans: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: #11111b; /* crust */
+      border-bottom: 1px solid var(--border);
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      color: var(--green);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .logo span { color: var(--muted); }
+    .header-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .gh-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 4px;
+      transition: color .2s, border-color .2s;
+    }
+    .gh-link:hover { color: var(--green); border-color: var(--green); }
+
+    /* ── NAV ── */
+    nav {
+      background: #181825; /* mantle */
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      position: sticky;
+      top: 65px;
+      z-index: 99;
+    }
+    nav::-webkit-scrollbar { display: none; }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 12px 14px;
+      font-size: 12px;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+    }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--green); border-bottom-color: var(--green); }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 32px 80px;
+    }
+
+    /* ── SECTION ── */
+    section {
+      margin-bottom: 64px;
+      scroll-margin-top: 110px;
+    }
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title .icon { font-size: 20px; }
+    .section-desc {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 24px;
+      max-width: 700px;
+    }
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    /* ── GRID ── */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+    .grid-3 { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    .grid-wide { grid-template-columns: 1fr 1fr; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .dot-green  { background: var(--green); }
+    .dot-blue   { background: var(--blue); }
+    .dot-orange { background: var(--orange); }
+    .dot-red    { background: var(--red); }
+    .dot-purple { background: var(--purple); }
+    .dot-cyan   { background: var(--cyan); }
+    .dot-yellow { background: var(--yellow); }
+
+    .card-body { padding: 16px; }
+
+    /* ── TABLE ── */
+    .cmd-table { width: 100%; border-collapse: collapse; }
+    .cmd-table tr { border-bottom: 1px solid var(--border); }
+    .cmd-table tr:last-child { border-bottom: none; }
+    .cmd-table td { padding: 7px 4px; vertical-align: top; }
+    .cmd-table td:first-child {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--green);
+      white-space: nowrap;
+      padding-right: 12px;
+      width: 1%;
+    }
+    .cmd-table td:last-child {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .cmd-table .arg  { color: var(--blue); }
+    .cmd-table .flag { color: var(--orange); }
+    .cmd-table .cmt  { color: #555; font-style: italic; }
+    .cmd-table .key  { color: var(--yellow); }
+
+    /* ── TERMINAL BLOCK ── */
+    .term {
+      background: #11111b; /* crust */
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .term-bar {
+      background: #181825; /* mantle */
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .term-btn { width: 12px; height: 12px; border-radius: 50%; }
+    .term-btn.r { background: #ff5f57; }
+    .term-btn.y { background: #febc2e; }
+    .term-btn.g { background: #28c840; }
+    .term-label { margin-left: 8px; font-size: 11px; color: var(--muted); }
+    .term-body {
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.9;
+      overflow-x: auto;
+    }
+    .term-body .prompt { color: var(--green); user-select: none; }
+    .term-body .cmd    { color: var(--text); }
+    .term-body .out    { color: var(--muted); }
+    .term-body .err    { color: var(--red); }
+    .term-body .hl     { color: var(--yellow); }
+    .term-body .arg    { color: var(--blue); }
+    .term-body .flag   { color: var(--orange); }
+    .term-body .cmt    { color: #555; }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .badge-basic        { background: #1e3a2e; color: var(--green); }
+    .badge-intermediate { background: #3a2620; color: var(--orange); }
+    .badge-advanced     { background: #3a1f2a; color: var(--red); }
+    .badge-expert       { background: #2b2040; color: var(--purple); }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-left: 3px solid var(--orange);
+      background: #231e14;
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .callout.info  { border-color: var(--blue);   background: #1e253e; }
+    .callout.tip   { border-color: var(--green);  background: #1e2e28; }
+    .callout.warn  { border-color: var(--orange); background: #2e2318; }
+    .callout.danger{ border-color: var(--red);    background: #2e1a20; }
+    .callout strong { color: var(--text); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .grid-wide { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      header { padding: 14px 16px; }
+      nav { padding: 0 8px; }
+      main { padding: 20px 16px 60px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <div class="logo">$ linux<span>_</span>cheatsheet</div>
+    <div class="header-sub">Referência rápida · wisecort</div>
+  </div>
+  <div class="header-right">
+    <a class="gh-link" href="https://github.com/wisecort" target="_blank">github/wisecort</a>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#fundamentos"   onclick="goto('fundamentos')">Fundamentos</a>
+  <a href="#arquivos"      onclick="goto('arquivos')">Arquivos</a>
+  <a href="#permissoes"    onclick="goto('permissoes')">Permissões</a>
+  <a href="#processos"     onclick="goto('processos')">Processos</a>
+  <a href="#redes"         onclick="goto('redes')">Redes</a>
+  <a href="#usuarios"      onclick="goto('usuarios')">Usuários</a>
+  <a href="#scripting"     onclick="goto('scripting')">Shell Script</a>
+  <a href="#storage"       onclick="goto('storage')">Storage</a>
+  <a href="#systemd"       onclick="goto('systemd')">systemd</a>
+  <a href="#seguranca"     onclick="goto('seguranca')">Segurança</a>
+  <a href="#kernel"        onclick="goto('kernel')">Kernel</a>
+  <a href="#devops"        onclick="goto('devops')">DevOps</a>
+</nav>
+
+<main>
+
+  <!-- ══════════════════════════════════════
+       1. FUNDAMENTOS
+  ══════════════════════════════════════ -->
+  <section id="fundamentos">
+    <div class="section-title"><span class="icon">🐧</span>Fundamentos &amp; Estrutura</div>
+    <div class="section-desc">Hierarquia do sistema de arquivos (FHS), processo de boot e comandos essenciais do terminal.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Hierarquia FHS</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>/</td><td>Raiz do sistema — tudo começa aqui</td></tr>
+            <tr><td>/bin</td><td>Binários essenciais (ls, cp, mv…)</td></tr>
+            <tr><td>/sbin</td><td>Binários do sistema (mount, fsck…)</td></tr>
+            <tr><td>/etc</td><td>Arquivos de configuração do sistema</td></tr>
+            <tr><td>/home</td><td>Diretórios pessoais dos usuários</td></tr>
+            <tr><td>/root</td><td>Diretório home do root</td></tr>
+            <tr><td>/var</td><td>Dados variáveis: logs, spool, cache</td></tr>
+            <tr><td>/tmp</td><td>Arquivos temporários (limpo no boot)</td></tr>
+            <tr><td>/proc</td><td>Filesystem virtual — estado do kernel</td></tr>
+            <tr><td>/sys</td><td>Filesystem virtual — dispositivos/módulos</td></tr>
+            <tr><td>/dev</td><td>Arquivos de dispositivos (block, char)</td></tr>
+            <tr><td>/usr</td><td>Programas e dados somente-leitura</td></tr>
+            <tr><td>/opt</td><td>Software de terceiros autocontido</td></tr>
+            <tr><td>/mnt</td><td>Ponto de montagem temporário</td></tr>
+            <tr><td>/media</td><td>Mídia removível (USB, CD…)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>Processo de Boot</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>BIOS/UEFI</td><td>Firmware — POST e seleção do dispositivo de boot</td></tr>
+            <tr><td>bootloader</td><td>GRUB2 — carrega o kernel na memória</td></tr>
+            <tr><td>kernel</td><td>Descomprime-se, monta initramfs, detecta hardware</td></tr>
+            <tr><td>initramfs</td><td>RAM disk temporário — drivers e montagem do root</td></tr>
+            <tr><td>init/systemd</td><td>PID 1 — inicia todos os serviços do sistema</td></tr>
+            <tr><td>targets</td><td>multi-user.target, graphical.target…</td></tr>
+            <tr><td>login</td><td>TTY virtual ou display manager (GDM, SDDM)</td></tr>
+          </table>
+
+          <div class="callout info" style="margin-top:12px">
+            <strong>Dica:</strong> Use <code>systemd-analyze blame</code> para ver quais serviços atrasam o boot.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Navegação &amp; Informação</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>pwd</td><td>Exibe o diretório atual</td></tr>
+            <tr><td>ls <span class="flag">-lah</span></td><td>Lista arquivos com detalhes e tamanho legível</td></tr>
+            <tr><td>cd <span class="arg">~/dir</span></td><td>Muda de diretório</td></tr>
+            <tr><td>tree <span class="flag">-L 2</span></td><td>Árvore de diretórios com 2 níveis de profundidade</td></tr>
+            <tr><td>file <span class="arg">foo</span></td><td>Detecta o tipo real do arquivo</td></tr>
+            <tr><td>stat <span class="arg">foo</span></td><td>Metadados completos (inode, datas, permissões)</td></tr>
+            <tr><td>which <span class="arg">cmd</span></td><td>Caminho do executável no PATH</td></tr>
+            <tr><td>type <span class="arg">cmd</span></td><td>Se é builtin, função ou binário</td></tr>
+            <tr><td>man <span class="arg">cmd</span></td><td>Manual do comando</td></tr>
+            <tr><td>info <span class="arg">cmd</span></td><td>Documentação GNU completa</td></tr>
+            <tr><td>help <span class="arg">builtin</span></td><td>Ajuda para builtins do bash</td></tr>
+            <tr><td>history</td><td>Histórico de comandos</td></tr>
+            <tr><td>!<span class="arg">n</span></td><td>Reexecuta comando número <em>n</em> do histórico</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>Variáveis de Ambiente</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>env</td><td>Lista todas as variáveis de ambiente</td></tr>
+            <tr><td>printenv <span class="arg">VAR</span></td><td>Exibe o valor de uma variável</td></tr>
+            <tr><td>export <span class="arg">VAR</span>=<span class="arg">val</span></td><td>Define e exporta variável para subprocessos</td></tr>
+            <tr><td>unset <span class="arg">VAR</span></td><td>Remove a variável</td></tr>
+            <tr><td>$PATH</td><td>Diretórios onde o shell busca executáveis</td></tr>
+            <tr><td>$HOME</td><td>Diretório home do usuário atual</td></tr>
+            <tr><td>$USER</td><td>Nome do usuário logado</td></tr>
+            <tr><td>$SHELL</td><td>Shell padrão do usuário</td></tr>
+            <tr><td>$?</td><td>Código de saída do último comando</td></tr>
+            <tr><td>$$</td><td>PID do processo atual</td></tr>
+            <tr><td>$!</td><td>PID do último processo em background</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /grid -->
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       2. ARQUIVOS & REDIRECIONAMENTO
+  ══════════════════════════════════════ -->
+  <section id="arquivos">
+    <div class="section-title"><span class="icon">📁</span>Arquivos &amp; Redirecionamento</div>
+    <div class="section-desc">Manipulação de arquivos, operadores de I/O, pipes e compressão.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Manipulação de Arquivos</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>cp <span class="flag">-r</span> <span class="arg">src dst</span></td><td>Copia recursivamente</td></tr>
+            <tr><td>mv <span class="arg">src dst</span></td><td>Move / renomeia</td></tr>
+            <tr><td>rm <span class="flag">-rf</span> <span class="arg">dir</span></td><td>Remove recursivamente (cuidado!)</td></tr>
+            <tr><td>mkdir <span class="flag">-p</span> <span class="arg">a/b/c</span></td><td>Cria diretório com pais intermediários</td></tr>
+            <tr><td>touch <span class="arg">file</span></td><td>Cria arquivo vazio ou atualiza timestamp</td></tr>
+            <tr><td>ln <span class="flag">-s</span> <span class="arg">tgt lnk</span></td><td>Cria link simbólico</td></tr>
+            <tr><td>ln <span class="arg">tgt lnk</span></td><td>Cria hard link</td></tr>
+            <tr><td>find <span class="arg">.</span> <span class="flag">-name</span> <span class="arg">"*.log"</span></td><td>Busca arquivos por nome</td></tr>
+            <tr><td>find <span class="arg">.</span> <span class="flag">-mtime -7</span></td><td>Modificados nos últimos 7 dias</td></tr>
+            <tr><td>rsync <span class="flag">-av</span> <span class="arg">src/ dst/</span></td><td>Sincroniza diretórios com progresso</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>Visualização de Conteúdo</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>cat <span class="arg">file</span></td><td>Exibe o conteúdo completo</td></tr>
+            <tr><td>less <span class="arg">file</span></td><td>Paginação interativa (q para sair)</td></tr>
+            <tr><td>head <span class="flag">-n 20</span> <span class="arg">file</span></td><td>Primeiras 20 linhas</td></tr>
+            <tr><td>tail <span class="flag">-f</span> <span class="arg">file</span></td><td>Acompanha arquivo em tempo real</td></tr>
+            <tr><td>grep <span class="flag">-rn</span> <span class="arg">"padrão" .</span></td><td>Busca recursiva com número de linha</td></tr>
+            <tr><td>grep <span class="flag">-i -E</span> <span class="arg">"regex"</span></td><td>Case-insensitive com regex estendido</td></tr>
+            <tr><td>awk <span class="arg">'{print $2}'</span></td><td>Imprime segunda coluna</td></tr>
+            <tr><td>sed <span class="arg">'s/old/new/g'</span></td><td>Substituição em stream</td></tr>
+            <tr><td>cut <span class="flag">-d: -f1</span> <span class="arg">/etc/passwd</span></td><td>Extrai campo 1 separado por :</td></tr>
+            <tr><td>sort <span class="flag">-k2 -n</span></td><td>Ordena pelo campo 2 numericamente</td></tr>
+            <tr><td>uniq <span class="flag">-c</span></td><td>Conta ocorrências de linhas repetidas</td></tr>
+            <tr><td>wc <span class="flag">-l</span></td><td>Conta linhas</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-cyan"></span>Redirecionamento &amp; Pipes</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td><span class="hl">&gt;</span> <span class="arg">file</span></td><td>Redireciona stdout (sobrescreve)</td></tr>
+            <tr><td><span class="hl">&gt;&gt;</span> <span class="arg">file</span></td><td>Redireciona stdout (acrescenta)</td></tr>
+            <tr><td><span class="hl">2&gt;</span> <span class="arg">file</span></td><td>Redireciona stderr</td></tr>
+            <tr><td><span class="hl">&amp;&gt;</span> <span class="arg">file</span></td><td>Redireciona stdout e stderr juntos</td></tr>
+            <tr><td><span class="hl">&lt;</span> <span class="arg">file</span></td><td>Usa arquivo como stdin</td></tr>
+            <tr><td><span class="hl">|</span></td><td>Pipe — passa stdout para o próximo cmd</td></tr>
+            <tr><td><span class="hl">|&amp;</span></td><td>Pipe de stdout e stderr</td></tr>
+            <tr><td>tee <span class="arg">file</span></td><td>Divide stdout: exibe e grava ao mesmo tempo</td></tr>
+            <tr><td>xargs <span class="flag">-I{}</span></td><td>Constrói e executa comandos a partir do stdin</td></tr>
+            <tr><td><span class="hl">cmd1 &amp;&amp; cmd2</span></td><td>cmd2 só executa se cmd1 for bem-sucedido</td></tr>
+            <tr><td><span class="hl">cmd1 || cmd2</span></td><td>cmd2 só executa se cmd1 falhar</td></tr>
+            <tr><td><span class="hl">$(cmd)</span></td><td>Substituição de comando (command substitution)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>Compressão &amp; Arquivamento</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>tar <span class="flag">-czf</span> <span class="arg">out.tar.gz dir/</span></td><td>Comprime com gzip</td></tr>
+            <tr><td>tar <span class="flag">-xzf</span> <span class="arg">file.tar.gz</span></td><td>Extrai arquivo gzip</td></tr>
+            <tr><td>tar <span class="flag">-cjf</span> <span class="arg">out.tar.bz2 dir/</span></td><td>Comprime com bzip2</td></tr>
+            <tr><td>tar <span class="flag">-cJf</span> <span class="arg">out.tar.xz dir/</span></td><td>Comprime com xz (melhor taxa)</td></tr>
+            <tr><td>tar <span class="flag">-tf</span> <span class="arg">file.tar.gz</span></td><td>Lista conteúdo sem extrair</td></tr>
+            <tr><td>gzip <span class="flag">-k</span> <span class="arg">file</span></td><td>Comprime mantendo o original</td></tr>
+            <tr><td>gunzip <span class="arg">file.gz</span></td><td>Descomprime gzip</td></tr>
+            <tr><td>zip <span class="flag">-r</span> <span class="arg">out.zip dir/</span></td><td>Cria arquivo zip</td></tr>
+            <tr><td>unzip <span class="arg">file.zip</span></td><td>Extrai arquivo zip</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       3. PERMISSÕES
+  ══════════════════════════════════════ -->
+  <section id="permissoes">
+    <div class="section-title"><span class="icon">🔐</span>Permissões</div>
+    <div class="section-desc">chmod, chown, bits especiais (SUID/SGID/sticky) e ACLs.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>chmod — Permissões Numéricas</div>
+        <div class="card-body">
+          <div class="callout info">
+            <strong>Formato:</strong> <code>rwxrwxrwx</code> → dono | grupo | outros
+          </div>
+          <table class="cmd-table">
+            <tr><td>chmod <span class="arg">755</span> <span class="arg">file</span></td><td>rwxr-xr-x (típico para executáveis)</td></tr>
+            <tr><td>chmod <span class="arg">644</span> <span class="arg">file</span></td><td>rw-r--r-- (típico para arquivos)</td></tr>
+            <tr><td>chmod <span class="arg">600</span> <span class="arg">file</span></td><td>rw------- (chave SSH privada)</td></tr>
+            <tr><td>chmod <span class="arg">700</span> <span class="arg">dir</span></td><td>rwx------ (diretório privado)</td></tr>
+            <tr><td>chmod <span class="flag">+x</span> <span class="arg">script.sh</span></td><td>Adiciona permissão de execução</td></tr>
+            <tr><td>chmod <span class="flag">-w</span> <span class="arg">file</span></td><td>Remove permissão de escrita</td></tr>
+            <tr><td>chmod <span class="flag">-R</span> <span class="arg">755 dir/</span></td><td>Aplica recursivamente</td></tr>
+            <tr><td>chmod <span class="arg">4755</span> <span class="arg">file</span></td><td>SUID — executa como dono do arquivo</td></tr>
+            <tr><td>chmod <span class="arg">2755</span> <span class="arg">dir</span></td><td>SGID — herda grupo do diretório pai</td></tr>
+            <tr><td>chmod <span class="arg">1777</span> <span class="arg">dir</span></td><td>Sticky bit — só dono pode apagar (ex: /tmp)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>chown &amp; chgrp</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>chown <span class="arg">user</span> <span class="arg">file</span></td><td>Muda o dono do arquivo</td></tr>
+            <tr><td>chown <span class="arg">user:group</span> <span class="arg">file</span></td><td>Muda dono e grupo simultaneamente</td></tr>
+            <tr><td>chown <span class="flag">-R</span> <span class="arg">user:group dir/</span></td><td>Aplica recursivamente</td></tr>
+            <tr><td>chgrp <span class="arg">group</span> <span class="arg">file</span></td><td>Muda apenas o grupo</td></tr>
+            <tr><td>id</td><td>Exibe UID, GID e grupos do usuário atual</td></tr>
+            <tr><td>groups <span class="arg">user</span></td><td>Lista grupos de um usuário</td></tr>
+          </table>
+
+          <div class="term" style="margin-top:12px">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">leitura de permissões</span>
+            </div>
+            <div class="term-body">
+              <span class="prompt">$ </span><span class="cmd">ls -la arquivo.txt</span><br>
+              <span class="out">-rw-r--r-- 1 matheus devs 1024 Mar 26 10:00 arquivo.txt</span><br>
+              <span class="cmt"># tipo  dono  grupo  outros</span><br>
+              <span class="cmt"># d=dir | -=arquivo | l=link</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>ACLs — Controle de Acesso Estendido</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>getfacl <span class="arg">file</span></td><td>Exibe ACLs do arquivo</td></tr>
+            <tr><td>setfacl <span class="flag">-m u:alice:rw</span> <span class="arg">file</span></td><td>Dá leitura/escrita para alice</td></tr>
+            <tr><td>setfacl <span class="flag">-m g:devs:rx</span> <span class="arg">dir</span></td><td>Dá leitura/execução ao grupo devs</td></tr>
+            <tr><td>setfacl <span class="flag">-x u:alice</span> <span class="arg">file</span></td><td>Remove ACL de alice</td></tr>
+            <tr><td>setfacl <span class="flag">-b</span> <span class="arg">file</span></td><td>Remove todas as ACLs do arquivo</td></tr>
+            <tr><td>setfacl <span class="flag">-R -m u:alice:rX</span> <span class="arg">dir/</span></td><td>Aplica recursivamente</td></tr>
+          </table>
+          <div class="callout warn" style="margin-top:12px">
+            <strong>Requisito:</strong> O filesystem deve estar montado com a opção <code>acl</code> (já padrão no ext4/xfs modernos).
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-purple"></span>umask &amp; Atributos Especiais</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>umask</td><td>Exibe a máscara padrão de permissões</td></tr>
+            <tr><td>umask <span class="arg">022</span></td><td>Define: arquivos=644, diretórios=755</td></tr>
+            <tr><td>umask <span class="arg">027</span></td><td>Define: arquivos=640, diretórios=750</td></tr>
+            <tr><td>lsattr <span class="arg">file</span></td><td>Lista atributos do filesystem</td></tr>
+            <tr><td>chattr <span class="flag">+i</span> <span class="arg">file</span></td><td>Imutável — nem root pode alterar</td></tr>
+            <tr><td>chattr <span class="flag">+a</span> <span class="arg">file</span></td><td>Append-only — só permite acrescentar</td></tr>
+            <tr><td>chattr <span class="flag">-i</span> <span class="arg">file</span></td><td>Remove flag imutável</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       4. PROCESSOS
+  ══════════════════════════════════════ -->
+  <section id="processos">
+    <div class="section-title"><span class="icon">⚙️</span>Processos</div>
+    <div class="section-desc">Monitoramento, sinais, job control e agendamento com cron.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Monitoramento</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>ps aux</td><td>Lista todos os processos com detalhes</td></tr>
+            <tr><td>ps <span class="flag">-ef</span></td><td>Formato completo com relações pai/filho</td></tr>
+            <tr><td>top</td><td>Monitor interativo em tempo real</td></tr>
+            <tr><td>htop</td><td>Monitor colorido e interativo (mais amigável)</td></tr>
+            <tr><td>pgrep <span class="arg">nginx</span></td><td>Retorna PIDs pelo nome do processo</td></tr>
+            <tr><td>pidof <span class="arg">sshd</span></td><td>PID de um programa em execução</td></tr>
+            <tr><td>lsof <span class="flag">-p</span> <span class="arg">PID</span></td><td>Arquivos abertos por um processo</td></tr>
+            <tr><td>lsof <span class="flag">-i :80</span></td><td>Processo usando a porta 80</td></tr>
+            <tr><td>strace <span class="flag">-p</span> <span class="arg">PID</span></td><td>Rastreia syscalls de um processo</td></tr>
+            <tr><td>pstree</td><td>Exibe árvore de processos</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-red"></span>Sinais (Signals)</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>kill <span class="arg">PID</span></td><td>Envia SIGTERM (15) — encerramento elegante</td></tr>
+            <tr><td>kill <span class="flag">-9</span> <span class="arg">PID</span></td><td>Envia SIGKILL — força encerramento imediato</td></tr>
+            <tr><td>kill <span class="flag">-HUP</span> <span class="arg">PID</span></td><td>SIGHUP (1) — recarrega configuração</td></tr>
+            <tr><td>killall <span class="arg">nginx</span></td><td>Mata todos os processos com esse nome</td></tr>
+            <tr><td>pkill <span class="arg">nginx</span></td><td>Mata por padrão de nome</td></tr>
+            <tr><td>Ctrl+C</td><td>SIGINT — interrompe o processo em foreground</td></tr>
+            <tr><td>Ctrl+Z</td><td>SIGTSTP — pausa o processo</td></tr>
+          </table>
+          <br>
+          <table class="cmd-table">
+            <tr><td><strong>Signal</strong></td><td><strong>Nº</strong></td><td><strong>Uso</strong></td></tr>
+            <tr><td>SIGHUP</td><td>1</td><td>Hang up / reload</td></tr>
+            <tr><td>SIGINT</td><td>2</td><td>Interrupção (Ctrl+C)</td></tr>
+            <tr><td>SIGTERM</td><td>15</td><td>Encerramento elegante</td></tr>
+            <tr><td>SIGKILL</td><td>9</td><td>Força encerramento</td></tr>
+            <tr><td>SIGSTOP</td><td>19</td><td>Pausa o processo</td></tr>
+            <tr><td>SIGCONT</td><td>18</td><td>Retoma processo pausado</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>Job Control</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td><span class="arg">cmd</span> &amp;</td><td>Executa comando em background</td></tr>
+            <tr><td>jobs</td><td>Lista jobs em background na sessão atual</td></tr>
+            <tr><td>fg <span class="arg">%1</span></td><td>Traz job 1 para foreground</td></tr>
+            <tr><td>bg <span class="arg">%1</span></td><td>Continua job 1 em background</td></tr>
+            <tr><td>disown <span class="arg">%1</span></td><td>Desvincula job do terminal (sobrevive ao logout)</td></tr>
+            <tr><td>nohup <span class="arg">cmd</span> &amp;</td><td>Ignora SIGHUP — processo persiste após logout</td></tr>
+            <tr><td>wait <span class="arg">PID</span></td><td>Aguarda processo terminar</td></tr>
+            <tr><td>nice <span class="flag">-n 10</span> <span class="arg">cmd</span></td><td>Inicia com prioridade reduzida (nice 10)</td></tr>
+            <tr><td>renice <span class="flag">-5</span> <span class="flag">-p</span> <span class="arg">PID</span></td><td>Altera prioridade de processo em execução</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-yellow"></span>Cron — Agendamento</div>
+        <div class="card-body">
+          <div class="term">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">formato crontab</span>
+            </div>
+            <div class="term-body">
+              <span class="cmt"># min hora dia mês diasemana comando</span><br>
+              <span class="hl">  *    *    *    *      *       /script.sh</span><br>
+              <span class="out">  0    2    *    *      *       backup.sh</span><br>
+              <span class="cmt">  └── todo dia às 02:00</span><br>
+              <span class="out">  */5  *    *    *      *       check.sh</span><br>
+              <span class="cmt">  └── a cada 5 minutos</span>
+            </div>
+          </div>
+          <table class="cmd-table">
+            <tr><td>crontab <span class="flag">-e</span></td><td>Edita o crontab do usuário atual</td></tr>
+            <tr><td>crontab <span class="flag">-l</span></td><td>Lista as entradas do crontab</td></tr>
+            <tr><td>crontab <span class="flag">-r</span></td><td>Remove o crontab (cuidado!)</td></tr>
+            <tr><td>@reboot</td><td>Executa uma vez no boot</td></tr>
+            <tr><td>@daily</td><td>Equivalente a 0 0 * * *</td></tr>
+            <tr><td>@weekly</td><td>Equivalente a 0 0 * * 0</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       5. REDES
+  ══════════════════════════════════════ -->
+  <section id="redes">
+    <div class="section-title"><span class="icon">🌐</span>Redes</div>
+    <div class="section-desc">Configuração de interfaces, diagnóstico, SSH, firewall e transferência de dados.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Diagnóstico</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>ip addr</td><td>Lista interfaces e endereços IP</td></tr>
+            <tr><td>ip route</td><td>Exibe a tabela de rotas</td></tr>
+            <tr><td>ip link</td><td>Estado das interfaces de rede</td></tr>
+            <tr><td>ss <span class="flag">-tuln</span></td><td>Portas TCP/UDP em escuta</td></tr>
+            <tr><td>ss <span class="flag">-tp</span></td><td>Conexões TCP com PID</td></tr>
+            <tr><td>ping <span class="flag">-c 4</span> <span class="arg">host</span></td><td>Testa conectividade ICMP</td></tr>
+            <tr><td>traceroute <span class="arg">host</span></td><td>Rastreia rota até o destino</td></tr>
+            <tr><td>dig <span class="arg">example.com</span></td><td>Consulta DNS detalhada</td></tr>
+            <tr><td>nslookup <span class="arg">host</span></td><td>Resolução de nomes simples</td></tr>
+            <tr><td>netstat <span class="flag">-rn</span></td><td>Tabela de roteamento (legado)</td></tr>
+            <tr><td>nmap <span class="flag">-sV</span> <span class="arg">host</span></td><td>Scan de portas com versão de serviço</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>SSH</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>ssh <span class="arg">user@host</span></td><td>Conecta via SSH</td></tr>
+            <tr><td>ssh <span class="flag">-p 2222</span> <span class="arg">user@host</span></td><td>Porta personalizada</td></tr>
+            <tr><td>ssh <span class="flag">-i</span> <span class="arg">key.pem user@host</span></td><td>Autentica com chave privada</td></tr>
+            <tr><td>ssh-keygen <span class="flag">-t ed25519</span></td><td>Gera par de chaves Ed25519</td></tr>
+            <tr><td>ssh-copy-id <span class="arg">user@host</span></td><td>Copia chave pública para o servidor</td></tr>
+            <tr><td>ssh <span class="flag">-L 8080:localhost:80</span> <span class="arg">host</span></td><td>Tunnel local (port forwarding)</td></tr>
+            <tr><td>ssh <span class="flag">-R 9090:localhost:3000</span> <span class="arg">host</span></td><td>Tunnel remoto reverso</td></tr>
+            <tr><td>ssh <span class="flag">-D 1080</span> <span class="arg">host</span></td><td>Proxy SOCKS5 dinâmico</td></tr>
+            <tr><td>scp <span class="arg">file user@host:/path</span></td><td>Copia arquivo via SSH</td></tr>
+            <tr><td>sftp <span class="arg">user@host</span></td><td>FTP seguro interativo</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>curl &amp; wget</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>curl <span class="arg">URL</span></td><td>Faz requisição GET e exibe resposta</td></tr>
+            <tr><td>curl <span class="flag">-o</span> <span class="arg">file URL</span></td><td>Salva resposta em arquivo</td></tr>
+            <tr><td>curl <span class="flag">-I</span> <span class="arg">URL</span></td><td>Exibe apenas os headers HTTP</td></tr>
+            <tr><td>curl <span class="flag">-X POST -d</span> <span class="arg">'data' URL</span></td><td>Envia requisição POST com dados</td></tr>
+            <tr><td>curl <span class="flag">-H</span> <span class="arg">'Auth: token' URL</span></td><td>Adiciona header personalizado</td></tr>
+            <tr><td>curl <span class="flag">-u user:pass</span> <span class="arg">URL</span></td><td>Autenticação básica HTTP</td></tr>
+            <tr><td>curl <span class="flag">-k</span> <span class="arg">URL</span></td><td>Ignora verificação de certificado SSL</td></tr>
+            <tr><td>wget <span class="flag">-c</span> <span class="arg">URL</span></td><td>Download com retomada automática</td></tr>
+            <tr><td>wget <span class="flag">-r -np</span> <span class="arg">URL</span></td><td>Download recursivo sem subir no tree</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-red"></span>Firewall — iptables / nftables</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>iptables <span class="flag">-L -n -v</span></td><td>Lista todas as regras com contadores</td></tr>
+            <tr><td>iptables <span class="flag">-A INPUT -p tcp --dport 22 -j ACCEPT</span></td><td>Permite SSH (porta 22)</td></tr>
+            <tr><td>iptables <span class="flag">-A INPUT -j DROP</span></td><td>Bloqueia todo tráfego restante</td></tr>
+            <tr><td>iptables <span class="flag">-D INPUT 3</span></td><td>Remove regra número 3 do INPUT</td></tr>
+            <tr><td>iptables-save</td><td>Exporta regras atuais</td></tr>
+            <tr><td>iptables-restore</td><td>Importa regras de um arquivo</td></tr>
+            <tr><td>ufw enable</td><td>Ativa firewall (Ubuntu)</td></tr>
+            <tr><td>ufw allow 80/tcp</td><td>Libera porta 80 TCP</td></tr>
+            <tr><td>ufw status verbose</td><td>Exibe status detalhado</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       6. USUÁRIOS & GRUPOS
+  ══════════════════════════════════════ -->
+  <section id="usuarios">
+    <div class="section-title"><span class="icon">👤</span>Usuários &amp; Grupos</div>
+    <div class="section-desc">Gerenciamento de usuários, grupos, sudo e autenticação.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Gerenciamento de Usuários</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>useradd <span class="flag">-m -s /bin/bash</span> <span class="arg">user</span></td><td>Cria usuário com home e bash</td></tr>
+            <tr><td>useradd <span class="flag">-m -G sudo,docker</span> <span class="arg">user</span></td><td>Cria usuário e adiciona a grupos</td></tr>
+            <tr><td>passwd <span class="arg">user</span></td><td>Define ou altera senha do usuário</td></tr>
+            <tr><td>usermod <span class="flag">-aG docker</span> <span class="arg">user</span></td><td>Adiciona usuário ao grupo docker</td></tr>
+            <tr><td>usermod <span class="flag">-s /bin/zsh</span> <span class="arg">user</span></td><td>Muda o shell padrão</td></tr>
+            <tr><td>usermod <span class="flag">-L</span> <span class="arg">user</span></td><td>Bloqueia a conta (lock)</td></tr>
+            <tr><td>usermod <span class="flag">-U</span> <span class="arg">user</span></td><td>Desbloqueia a conta (unlock)</td></tr>
+            <tr><td>userdel <span class="flag">-r</span> <span class="arg">user</span></td><td>Remove usuário e diretório home</td></tr>
+            <tr><td>chage <span class="flag">-l</span> <span class="arg">user</span></td><td>Exibe validade/expiração da conta</td></tr>
+            <tr><td>chage <span class="flag">-M 90</span> <span class="arg">user</span></td><td>Senha expira em 90 dias</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>Grupos</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>groupadd <span class="arg">devs</span></td><td>Cria novo grupo</td></tr>
+            <tr><td>groupdel <span class="arg">devs</span></td><td>Remove grupo</td></tr>
+            <tr><td>gpasswd <span class="flag">-a</span> <span class="arg">user group</span></td><td>Adiciona usuário ao grupo</td></tr>
+            <tr><td>gpasswd <span class="flag">-d</span> <span class="arg">user group</span></td><td>Remove usuário do grupo</td></tr>
+            <tr><td>cat /etc/group</td><td>Lista todos os grupos do sistema</td></tr>
+            <tr><td>getent group <span class="arg">devs</span></td><td>Exibe membros de um grupo</td></tr>
+            <tr><td>newgrp <span class="arg">docker</span></td><td>Troca o grupo efetivo na sessão atual</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>sudo &amp; su</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>sudo <span class="arg">cmd</span></td><td>Executa como root</td></tr>
+            <tr><td>sudo <span class="flag">-u alice</span> <span class="arg">cmd</span></td><td>Executa como outro usuário</td></tr>
+            <tr><td>sudo <span class="flag">-i</span></td><td>Abre shell interativo de root</td></tr>
+            <tr><td>sudo <span class="flag">-l</span></td><td>Lista o que o usuário pode executar via sudo</td></tr>
+            <tr><td>visudo</td><td>Edita /etc/sudoers com validação de sintaxe</td></tr>
+            <tr><td>su <span class="flag">-</span> <span class="arg">user</span></td><td>Troca para outro usuário (com ambiente)</td></tr>
+            <tr><td>su <span class="flag">-c</span> <span class="arg">"cmd" user</span></td><td>Executa um comando como outro usuário</td></tr>
+          </table>
+          <div class="callout tip" style="margin-top:12px">
+            <strong>Sudoers:</strong> <code>user ALL=(ALL:ALL) NOPASSWD: /bin/systemctl</code> — permite executar systemctl sem senha.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-cyan"></span>Arquivos de Configuração</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>/etc/passwd</td><td>Usuários: login, UID, GID, home, shell</td></tr>
+            <tr><td>/etc/shadow</td><td>Hashes de senhas (somente root)</td></tr>
+            <tr><td>/etc/group</td><td>Grupos e seus membros</td></tr>
+            <tr><td>/etc/sudoers</td><td>Regras de acesso sudo (editar com visudo)</td></tr>
+            <tr><td>/etc/sudoers.d/</td><td>Fragmentos de sudoers por arquivo</td></tr>
+            <tr><td>/etc/skel/</td><td>Template de home para novos usuários</td></tr>
+            <tr><td>/etc/login.defs</td><td>Políticas padrão de senha e expiração</td></tr>
+            <tr><td>/etc/pam.d/</td><td>Configurações de autenticação PAM</td></tr>
+            <tr><td>/var/log/auth.log</td><td>Log de autenticações (Debian/Ubuntu)</td></tr>
+            <tr><td>/var/log/secure</td><td>Log de autenticações (RHEL/CentOS)</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       7. SHELL SCRIPTING
+  ══════════════════════════════════════ -->
+  <section id="scripting">
+    <div class="section-title"><span class="icon">📜</span>Shell Scripting</div>
+    <div class="section-desc">Variáveis, condicionais, loops, funções e tratamento de erros em Bash.</div>
+    <hr class="section-divider">
+
+    <div class="grid grid-wide">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Estruturas Básicas</div>
+        <div class="card-body">
+          <div class="term">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">script.sh</span>
+            </div>
+            <div class="term-body">
+<span class="hl">#!/usr/bin/env bash</span><br>
+<span class="cmt"># Variáveis</span><br>
+<span class="cmd">NAME="wisecort"</span><br>
+<span class="cmd">echo "Olá, ${NAME}!"</span><br>
+<br>
+<span class="cmt"># Condicional</span><br>
+<span class="cmd">if [[ -f "/etc/os-release" ]]; then</span><br>
+<span class="cmd">&nbsp;&nbsp;source /etc/os-release</span><br>
+<span class="cmd">&nbsp;&nbsp;echo "Distro: ${NAME}"</span><br>
+<span class="cmd">elif [[ -d "/tmp" ]]; then</span><br>
+<span class="cmd">&nbsp;&nbsp;echo "/tmp existe"</span><br>
+<span class="cmd">else</span><br>
+<span class="cmd">&nbsp;&nbsp;echo "Nada encontrado"</span><br>
+<span class="cmd">fi</span><br>
+<br>
+<span class="cmt"># Loop for</span><br>
+<span class="cmd">for i in {1..5}; do</span><br>
+<span class="cmd">&nbsp;&nbsp;echo "Item ${i}"</span><br>
+<span class="cmd">done</span><br>
+<br>
+<span class="cmt"># Loop while</span><br>
+<span class="cmd">count=0</span><br>
+<span class="cmd">while [[ ${count} -lt 3 ]]; do</span><br>
+<span class="cmd">&nbsp;&nbsp;echo "count=${count}"</span><br>
+<span class="cmd">&nbsp;&nbsp;((count++))</span><br>
+<span class="cmd">done</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>Funções &amp; Tratamento de Erros</div>
+        <div class="card-body">
+          <div class="term">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">functions.sh</span>
+            </div>
+            <div class="term-body">
+<span class="cmt"># Sair imediatamente em caso de erro</span><br>
+<span class="cmd">set -euo pipefail</span><br>
+<br>
+<span class="cmt"># Função com retorno</span><br>
+<span class="cmd">greet() {</span><br>
+<span class="cmd">&nbsp;&nbsp;local user="${1:-world}"</span><br>
+<span class="cmd">&nbsp;&nbsp;echo "Hello, ${user}!"</span><br>
+<span class="cmd">}</span><br>
+<br>
+<span class="cmd">greet "wisecort"</span><br>
+<br>
+<span class="cmt"># Tratamento de erros com trap</span><br>
+<span class="cmd">cleanup() {</span><br>
+<span class="cmd">&nbsp;&nbsp;echo "Limpando temporários..."</span><br>
+<span class="cmd">&nbsp;&nbsp;rm -f /tmp/script_$$.*</span><br>
+<span class="cmd">}</span><br>
+<span class="cmd">trap cleanup EXIT ERR</span><br>
+<br>
+<span class="cmt"># Arrays</span><br>
+<span class="cmd">files=("a.txt" "b.txt" "c.txt")</span><br>
+<span class="cmd">for f in "${files[@]}"; do</span><br>
+<span class="cmd">&nbsp;&nbsp;echo "Arquivo: ${f}"</span><br>
+<span class="cmd">done</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="grid" style="margin-top:16px">
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>Operadores de Teste</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td><span class="flag">-f</span> file</td><td>Arquivo regular existe</td></tr>
+            <tr><td><span class="flag">-d</span> dir</td><td>Diretório existe</td></tr>
+            <tr><td><span class="flag">-e</span> path</td><td>Caminho existe (qualquer tipo)</td></tr>
+            <tr><td><span class="flag">-r</span> file</td><td>Arquivo tem permissão de leitura</td></tr>
+            <tr><td><span class="flag">-w</span> file</td><td>Arquivo tem permissão de escrita</td></tr>
+            <tr><td><span class="flag">-x</span> file</td><td>Arquivo tem permissão de execução</td></tr>
+            <tr><td><span class="flag">-z</span> str</td><td>String está vazia</td></tr>
+            <tr><td><span class="flag">-n</span> str</td><td>String não está vazia</td></tr>
+            <tr><td>a <span class="flag">-eq</span> b</td><td>Números iguais</td></tr>
+            <tr><td>a <span class="flag">-lt</span> b</td><td>Menor que (less than)</td></tr>
+            <tr><td>a <span class="flag">-gt</span> b</td><td>Maior que (greater than)</td></tr>
+            <tr><td>a <span class="flag">-ne</span> b</td><td>Diferente de (not equal)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-purple"></span>Expansão de Parâmetros</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>${<span class="arg">VAR</span>:-default}</td><td>Usa default se VAR não definida</td></tr>
+            <tr><td>${<span class="arg">VAR</span>:=default}</td><td>Define e usa default se VAR vazia</td></tr>
+            <tr><td>${<span class="arg">VAR</span>:?erro}</td><td>Exibe erro e sai se VAR vazia</td></tr>
+            <tr><td>${<span class="arg">VAR</span>:+outro}</td><td>Retorna outro se VAR estiver definida</td></tr>
+            <tr><td>${#<span class="arg">VAR</span>}</td><td>Tamanho da string</td></tr>
+            <tr><td>${<span class="arg">VAR</span>^^}</td><td>Converte para MAIÚSCULAS</td></tr>
+            <tr><td>${<span class="arg">VAR</span>,,}</td><td>Converte para minúsculas</td></tr>
+            <tr><td>${<span class="arg">VAR</span>#prefix}</td><td>Remove prefixo mais curto</td></tr>
+            <tr><td>${<span class="arg">VAR</span>%suffix}</td><td>Remove sufixo mais curto</td></tr>
+            <tr><td>${<span class="arg">VAR</span>/old/new}</td><td>Substitui primeira ocorrência</td></tr>
+            <tr><td>${<span class="arg">VAR</span>//old/new}</td><td>Substitui todas as ocorrências</td></tr>
+            <tr><td>${<span class="arg">VAR</span>:2:4}</td><td>Substring: posição 2, 4 caracteres</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-cyan"></span>Argumentos &amp; Parâmetros Especiais</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>$0</td><td>Nome do script</td></tr>
+            <tr><td>$1 … $9</td><td>Argumentos posicionais</td></tr>
+            <tr><td>${10}</td><td>Argumento 10 em diante (precisa de chaves)</td></tr>
+            <tr><td>$@</td><td>Todos os argumentos (cada um entre aspas)</td></tr>
+            <tr><td>$*</td><td>Todos os argumentos como uma string</td></tr>
+            <tr><td>$#</td><td>Número de argumentos</td></tr>
+            <tr><td>$?</td><td>Exit code do último comando</td></tr>
+            <tr><td>$$</td><td>PID do script atual</td></tr>
+            <tr><td>$!</td><td>PID do último processo em background</td></tr>
+            <tr><td>shift</td><td>Desloca argumentos ($2 vira $1, etc.)</td></tr>
+            <tr><td>getopts</td><td>Processa opções (-f, -v, etc.)</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       8. STORAGE
+  ══════════════════════════════════════ -->
+  <section id="storage">
+    <div class="section-title"><span class="icon">💾</span>Storage</div>
+    <div class="section-desc">Discos, partições, filesystems, montagem e LVM.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Discos &amp; Partições</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>lsblk</td><td>Lista dispositivos de bloco em árvore</td></tr>
+            <tr><td>lsblk <span class="flag">-f</span></td><td>Mostra filesystem e ponto de montagem</td></tr>
+            <tr><td>blkid</td><td>UUID e tipo de cada partição</td></tr>
+            <tr><td>fdisk <span class="arg">/dev/sda</span></td><td>Particionador interativo (MBR)</td></tr>
+            <tr><td>gdisk <span class="arg">/dev/sda</span></td><td>Particionador interativo (GPT)</td></tr>
+            <tr><td>parted <span class="arg">/dev/sda</span> print</td><td>Exibe tabela de partições</td></tr>
+            <tr><td>mkfs.ext4 <span class="arg">/dev/sda1</span></td><td>Formata partição com ext4</td></tr>
+            <tr><td>mkfs.xfs <span class="arg">/dev/sda1</span></td><td>Formata com XFS</td></tr>
+            <tr><td>fsck <span class="arg">/dev/sda1</span></td><td>Verifica e repara filesystem</td></tr>
+            <tr><td>tune2fs <span class="flag">-l</span> <span class="arg">/dev/sda1</span></td><td>Exibe parâmetros do ext2/3/4</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>Montagem</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>mount <span class="arg">/dev/sda1 /mnt</span></td><td>Monta partição em /mnt</td></tr>
+            <tr><td>mount <span class="flag">-t ext4</span> <span class="arg">/dev/sda1 /mnt</span></td><td>Especifica tipo de filesystem</td></tr>
+            <tr><td>mount <span class="flag">-o ro</span> <span class="arg">/dev/sda1 /mnt</span></td><td>Monta como somente-leitura</td></tr>
+            <tr><td>umount <span class="arg">/mnt</span></td><td>Desmonta o ponto de montagem</td></tr>
+            <tr><td>umount <span class="flag">-l</span> <span class="arg">/mnt</span></td><td>Lazy umount — desmonta quando ocioso</td></tr>
+            <tr><td>df <span class="flag">-h</span></td><td>Uso de espaço em disco (legível)</td></tr>
+            <tr><td>du <span class="flag">-sh</span> <span class="arg">dir/</span></td><td>Tamanho total do diretório</td></tr>
+            <tr><td>du <span class="flag">-sh</span> <span class="arg">*</span> | sort <span class="flag">-h</span></td><td>Tamanho de cada item, ordenado</td></tr>
+          </table>
+          <div class="callout info" style="margin-top:12px">
+            <strong>/etc/fstab:</strong> UUID=... /mnt/data ext4 defaults,noatime 0 2
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>LVM — Logical Volume Manager</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td colspan="2" style="color:var(--muted); font-size:11px; padding-bottom:6px">Physical Volumes (PV)</td></tr>
+            <tr><td>pvcreate <span class="arg">/dev/sdb</span></td><td>Inicializa disco como PV</td></tr>
+            <tr><td>pvs</td><td>Lista physical volumes</td></tr>
+            <tr><td colspan="2" style="color:var(--muted); font-size:11px; padding:6px 0">Volume Groups (VG)</td></tr>
+            <tr><td>vgcreate <span class="arg">vg0 /dev/sdb</span></td><td>Cria volume group</td></tr>
+            <tr><td>vgextend <span class="arg">vg0 /dev/sdc</span></td><td>Adiciona PV ao VG</td></tr>
+            <tr><td>vgs</td><td>Lista volume groups</td></tr>
+            <tr><td colspan="2" style="color:var(--muted); font-size:11px; padding:6px 0">Logical Volumes (LV)</td></tr>
+            <tr><td>lvcreate <span class="flag">-L 20G -n data</span> <span class="arg">vg0</span></td><td>Cria LV de 20GB</td></tr>
+            <tr><td>lvextend <span class="flag">-L +10G</span> <span class="arg">/dev/vg0/data</span></td><td>Expande LV em 10GB</td></tr>
+            <tr><td>resize2fs <span class="arg">/dev/vg0/data</span></td><td>Redimensiona filesystem após lvextend</td></tr>
+            <tr><td>lvs</td><td>Lista logical volumes</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-purple"></span>RAID com mdadm</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>mdadm <span class="flag">--create /dev/md0 --level=1 --raid-devices=2</span> <span class="arg">/dev/sd{b,c}</span></td><td>Cria RAID 1 (espelhamento)</td></tr>
+            <tr><td>mdadm <span class="flag">--detail</span> <span class="arg">/dev/md0</span></td><td>Detalhes do array RAID</td></tr>
+            <tr><td>cat /proc/mdstat</td><td>Status de todos os arrays</td></tr>
+            <tr><td>mdadm <span class="flag">--manage /dev/md0 --fail</span> <span class="arg">/dev/sdb</span></td><td>Marca disco como falho</td></tr>
+            <tr><td>mdadm <span class="flag">--manage /dev/md0 --add</span> <span class="arg">/dev/sdd</span></td><td>Adiciona novo disco ao array</td></tr>
+          </table>
+          <div class="callout warn" style="margin-top:12px">
+            <strong>RAID 0</strong> = performance (sem redundância)<br>
+            <strong>RAID 1</strong> = espelhamento (redundância)<br>
+            <strong>RAID 5</strong> = paridade distribuída (mín. 3 discos)<br>
+            <strong>RAID 10</strong> = RAID 1+0 (performance + redundância)
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       9. SYSTEMD
+  ══════════════════════════════════════ -->
+  <section id="systemd">
+    <div class="section-title"><span class="icon">🔧</span>systemd</div>
+    <div class="section-desc">Gerenciamento de serviços, units, targets e logs com journald.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>systemctl — Controle de Serviços</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>systemctl start <span class="arg">nginx</span></td><td>Inicia o serviço</td></tr>
+            <tr><td>systemctl stop <span class="arg">nginx</span></td><td>Para o serviço</td></tr>
+            <tr><td>systemctl restart <span class="arg">nginx</span></td><td>Reinicia o serviço</td></tr>
+            <tr><td>systemctl reload <span class="arg">nginx</span></td><td>Recarrega configuração sem parar</td></tr>
+            <tr><td>systemctl enable <span class="arg">nginx</span></td><td>Habilita no boot</td></tr>
+            <tr><td>systemctl disable <span class="arg">nginx</span></td><td>Desabilita no boot</td></tr>
+            <tr><td>systemctl enable <span class="flag">--now</span> <span class="arg">nginx</span></td><td>Habilita e inicia imediatamente</td></tr>
+            <tr><td>systemctl status <span class="arg">nginx</span></td><td>Status e últimas linhas de log</td></tr>
+            <tr><td>systemctl is-active <span class="arg">nginx</span></td><td>Retorna "active" ou "inactive"</td></tr>
+            <tr><td>systemctl list-units <span class="flag">--type=service</span></td><td>Lista todos os services</td></tr>
+            <tr><td>systemctl list-unit-files</td><td>Lista units e estado de enable</td></tr>
+            <tr><td>systemctl daemon-reload</td><td>Recarrega units após editar arquivos</td></tr>
+            <tr><td>systemctl mask <span class="arg">service</span></td><td>Impede completamente a inicialização</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>journald — Logs do Sistema</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>journalctl</td><td>Todos os logs do sistema</td></tr>
+            <tr><td>journalctl <span class="flag">-f</span></td><td>Segue logs em tempo real (como tail -f)</td></tr>
+            <tr><td>journalctl <span class="flag">-u</span> <span class="arg">nginx</span></td><td>Logs apenas do serviço nginx</td></tr>
+            <tr><td>journalctl <span class="flag">-u nginx -f</span></td><td>Segue logs do nginx em tempo real</td></tr>
+            <tr><td>journalctl <span class="flag">-n 50</span></td><td>Últimas 50 linhas</td></tr>
+            <tr><td>journalctl <span class="flag">--since "1 hour ago"</span></td><td>Logs da última hora</td></tr>
+            <tr><td>journalctl <span class="flag">--since "2024-01-01" --until "2024-01-02"</span></td><td>Logs em intervalo de datas</td></tr>
+            <tr><td>journalctl <span class="flag">-p err</span></td><td>Apenas logs de nível error</td></tr>
+            <tr><td>journalctl <span class="flag">-p warning..crit</span></td><td>De warning até critical</td></tr>
+            <tr><td>journalctl <span class="flag">--disk-usage</span></td><td>Espaço ocupado pelos logs</td></tr>
+            <tr><td>journalctl <span class="flag">--vacuum-time=7d</span></td><td>Remove logs com mais de 7 dias</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>Criando um Unit File</div>
+        <div class="card-body">
+          <div class="term">
+            <div class="term-bar">
+              <span class="term-btn r"></span><span class="term-btn y"></span><span class="term-btn g"></span>
+              <span class="term-label">/etc/systemd/system/meuapp.service</span>
+            </div>
+            <div class="term-body">
+<span class="hl">[Unit]</span><br>
+<span class="cmd">Description=Meu Aplicativo</span><br>
+<span class="cmd">After=network.target</span><br>
+<span class="cmd">Wants=network.target</span><br>
+<br>
+<span class="hl">[Service]</span><br>
+<span class="cmd">Type=simple</span><br>
+<span class="cmd">User=www-data</span><br>
+<span class="cmd">WorkingDirectory=/opt/meuapp</span><br>
+<span class="cmd">ExecStart=/opt/meuapp/start.sh</span><br>
+<span class="cmd">ExecReload=/bin/kill -HUP $MAINPID</span><br>
+<span class="cmd">Restart=on-failure</span><br>
+<span class="cmd">RestartSec=5s</span><br>
+<span class="cmd">StandardOutput=journal</span><br>
+<span class="cmd">StandardError=journal</span><br>
+<br>
+<span class="hl">[Install]</span><br>
+<span class="cmd">WantedBy=multi-user.target</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-cyan"></span>Targets &amp; Boot</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>systemctl get-default</td><td>Exibe o target padrão de boot</td></tr>
+            <tr><td>systemctl set-default <span class="arg">multi-user.target</span></td><td>Boot sem interface gráfica</td></tr>
+            <tr><td>systemctl set-default <span class="arg">graphical.target</span></td><td>Boot com interface gráfica</td></tr>
+            <tr><td>systemctl isolate <span class="arg">rescue.target</span></td><td>Modo de recuperação</td></tr>
+            <tr><td>systemctl poweroff</td><td>Desliga o sistema</td></tr>
+            <tr><td>systemctl reboot</td><td>Reinicia o sistema</td></tr>
+            <tr><td>systemd-analyze</td><td>Tempo total de boot</td></tr>
+            <tr><td>systemd-analyze blame</td><td>Serviços que mais demoram no boot</td></tr>
+            <tr><td>systemd-analyze critical-chain</td><td>Caminho crítico do boot</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       10. SEGURANÇA
+  ══════════════════════════════════════ -->
+  <section id="seguranca">
+    <div class="section-title"><span class="icon">🛡️</span>Segurança</div>
+    <div class="section-desc">Hardening, auditoria, SELinux/AppArmor e SSL/TLS.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-red"></span>Auditoria &amp; Hardening <span class="badge badge-advanced">avançado</span></div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>lynis audit system</td><td>Auditoria de segurança completa do sistema</td></tr>
+            <tr><td>auditctl <span class="flag">-l</span></td><td>Lista regras de auditoria ativas</td></tr>
+            <tr><td>ausearch <span class="flag">-k passwd</span></td><td>Busca eventos com chave "passwd"</td></tr>
+            <tr><td>last</td><td>Histórico de logins</td></tr>
+            <tr><td>lastb</td><td>Tentativas de login falhadas</td></tr>
+            <tr><td>who</td><td>Usuários atualmente logados</td></tr>
+            <tr><td>w</td><td>Usuários logados e o que estão fazendo</td></tr>
+            <tr><td>fail2ban-client status</td><td>Status do fail2ban e jails ativas</td></tr>
+            <tr><td>ss <span class="flag">-tuln</span></td><td>Portas abertas — reduza ao mínimo necessário</td></tr>
+            <tr><td>find / <span class="flag">-perm -4000</span> 2>/dev/null</td><td>Arquivos com SUID bit (potencial risco)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>SELinux <span class="badge badge-expert">expert</span></div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>getenforce</td><td>Exibe modo: Enforcing / Permissive / Disabled</td></tr>
+            <tr><td>setenforce 0</td><td>Muda para Permissive (temporário)</td></tr>
+            <tr><td>setenforce 1</td><td>Muda para Enforcing (temporário)</td></tr>
+            <tr><td>sestatus</td><td>Status detalhado do SELinux</td></tr>
+            <tr><td>ls <span class="flag">-Z</span> <span class="arg">file</span></td><td>Exibe contexto SELinux do arquivo</td></tr>
+            <tr><td>ps <span class="flag">-eZ</span></td><td>Contexto SELinux dos processos</td></tr>
+            <tr><td>chcon <span class="flag">-t httpd_sys_content_t</span> <span class="arg">file</span></td><td>Altera contexto SELinux</td></tr>
+            <tr><td>restorecon <span class="flag">-Rv</span> <span class="arg">/var/www</span></td><td>Restaura contextos padrão</td></tr>
+            <tr><td>ausearch <span class="flag">-m avc</span></td><td>Busca negações de acesso SELinux</td></tr>
+            <tr><td>audit2allow <span class="flag">-a</span></td><td>Sugere regras a partir dos logs</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-purple"></span>SSL/TLS com openssl</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>openssl genrsa <span class="flag">-out</span> <span class="arg">key.pem 4096</span></td><td>Gera chave privada RSA 4096 bits</td></tr>
+            <tr><td>openssl req <span class="flag">-new -key</span> <span class="arg">key.pem -out csr.pem</span></td><td>Cria CSR (requisição de certificado)</td></tr>
+            <tr><td>openssl x509 <span class="flag">-req -days 365 -in</span> <span class="arg">csr.pem</span> <span class="flag">-signkey</span> <span class="arg">key.pem -out cert.pem</span></td><td>Assina o certificado (self-signed)</td></tr>
+            <tr><td>openssl x509 <span class="flag">-in</span> <span class="arg">cert.pem -text -noout</span></td><td>Exibe detalhes do certificado</td></tr>
+            <tr><td>openssl s_client <span class="flag">-connect</span> <span class="arg">host:443</span></td><td>Testa conexão TLS com o servidor</td></tr>
+            <tr><td>openssl verify <span class="arg">cert.pem</span></td><td>Verifica validade do certificado</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-cyan"></span>SSH Hardening</div>
+        <div class="card-body">
+          <div class="callout danger">
+            <strong>Edite /etc/ssh/sshd_config e reinicie sshd após as mudanças.</strong>
+          </div>
+          <table class="cmd-table">
+            <tr><td>Port <span class="arg">2222</span></td><td>Mude a porta padrão (22)</td></tr>
+            <tr><td>PermitRootLogin <span class="arg">no</span></td><td>Proíbe login direto como root</td></tr>
+            <tr><td>PasswordAuthentication <span class="arg">no</span></td><td>Desativa autenticação por senha</td></tr>
+            <tr><td>PubkeyAuthentication <span class="arg">yes</span></td><td>Habilita autenticação por chave</td></tr>
+            <tr><td>MaxAuthTries <span class="arg">3</span></td><td>Máximo de tentativas de autenticação</td></tr>
+            <tr><td>AllowUsers <span class="arg">matheus deploy</span></td><td>Permite apenas esses usuários</td></tr>
+            <tr><td>ClientAliveInterval <span class="arg">300</span></td><td>Detecta conexões inativas (segundos)</td></tr>
+            <tr><td>X11Forwarding <span class="arg">no</span></td><td>Desativa forwarding de X11</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       11. KERNEL
+  ══════════════════════════════════════ -->
+  <section id="kernel">
+    <div class="section-title"><span class="icon">⚛️</span>Kernel</div>
+    <div class="section-desc">Módulos, parâmetros do kernel, namespaces e cgroups.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>Módulos do Kernel</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>lsmod</td><td>Lista módulos carregados</td></tr>
+            <tr><td>modinfo <span class="arg">module</span></td><td>Informações detalhadas do módulo</td></tr>
+            <tr><td>modprobe <span class="arg">module</span></td><td>Carrega módulo (e dependências)</td></tr>
+            <tr><td>modprobe <span class="flag">-r</span> <span class="arg">module</span></td><td>Remove módulo</td></tr>
+            <tr><td>insmod <span class="arg">module.ko</span></td><td>Insere módulo diretamente (sem deps)</td></tr>
+            <tr><td>rmmod <span class="arg">module</span></td><td>Remove módulo (sem deps automáticas)</td></tr>
+            <tr><td>depmod <span class="flag">-a</span></td><td>Recalcula dependências de módulos</td></tr>
+            <tr><td>/etc/modules-load.d/</td><td>Módulos a carregar no boot</td></tr>
+            <tr><td>/etc/modprobe.d/</td><td>Configurações e blacklists de módulos</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>sysctl — Parâmetros do Kernel</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>sysctl <span class="flag">-a</span></td><td>Lista todos os parâmetros</td></tr>
+            <tr><td>sysctl <span class="arg">vm.swappiness</span></td><td>Lê um parâmetro específico</td></tr>
+            <tr><td>sysctl <span class="arg">vm.swappiness=10</span></td><td>Altera parâmetro (temporário)</td></tr>
+            <tr><td>sysctl <span class="flag">-p</span></td><td>Aplica configurações do /etc/sysctl.conf</td></tr>
+            <tr><td>/etc/sysctl.conf</td><td>Configurações persistentes do kernel</td></tr>
+            <tr><td>/etc/sysctl.d/</td><td>Fragmentos de configuração</td></tr>
+          </table>
+          <div class="callout info" style="margin-top:12px">
+            <strong>Parâmetros comuns:</strong><br>
+            <code>net.ipv4.ip_forward=1</code> — ativa roteamento<br>
+            <code>vm.swappiness=10</code> — reduz uso de swap<br>
+            <code>net.core.somaxconn=65535</code> — aumenta backlog de conexões
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>Namespaces &amp; cgroups <span class="badge badge-expert">expert</span></div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>lsns</td><td>Lista todos os namespaces ativos</td></tr>
+            <tr><td>unshare <span class="flag">--pid --fork</span> <span class="arg">bash</span></td><td>Cria novo namespace de PID</td></tr>
+            <tr><td>nsenter <span class="flag">-t PID --net</span></td><td>Entra no namespace de rede de um processo</td></tr>
+            <tr><td>ip netns add <span class="arg">myns</span></td><td>Cria network namespace nomeado</td></tr>
+            <tr><td>ip netns exec <span class="arg">myns bash</span></td><td>Executa comando no namespace</td></tr>
+            <tr><td>systemd-cgtop</td><td>Monitor de cgroups em tempo real</td></tr>
+            <tr><td>cat /proc/cgroups</td><td>Subsistemas de cgroup disponíveis</td></tr>
+            <tr><td>systemctl set-property <span class="arg">service</span> <span class="flag">CPUQuota=50%</span></td><td>Limita CPU de um serviço a 50%</td></tr>
+            <tr><td>systemctl set-property <span class="arg">service</span> <span class="flag">MemoryMax=512M</span></td><td>Limita memória de um serviço</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-purple"></span>Informações do Sistema</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>uname <span class="flag">-r</span></td><td>Versão do kernel em execução</td></tr>
+            <tr><td>uname <span class="flag">-a</span></td><td>Todas as informações do sistema</td></tr>
+            <tr><td>cat /proc/version</td><td>Versão e compilador do kernel</td></tr>
+            <tr><td>cat /proc/cpuinfo</td><td>Informações detalhadas da CPU</td></tr>
+            <tr><td>cat /proc/meminfo</td><td>Uso e disponibilidade de memória</td></tr>
+            <tr><td>free <span class="flag">-h</span></td><td>Resumo de uso de memória</td></tr>
+            <tr><td>vmstat</td><td>Estatísticas de memória, swap, I/O e CPU</td></tr>
+            <tr><td>iostat</td><td>Estatísticas de I/O de disco e CPU</td></tr>
+            <tr><td>dmesg <span class="flag">-T</span></td><td>Log do kernel com timestamps legíveis</td></tr>
+            <tr><td>dmesg <span class="flag">-T | grep -i error</span></td><td>Filtra erros no log do kernel</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       12. DEVOPS
+  ══════════════════════════════════════ -->
+  <section id="devops">
+    <div class="section-title"><span class="icon">🚀</span>DevOps</div>
+    <div class="section-desc">Docker, Git, tmux e ferramentas de produtividade no terminal.</div>
+    <hr class="section-divider">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-blue"></span>Docker — Essencial</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>docker ps <span class="flag">-a</span></td><td>Lista todos os containers (inclusive parados)</td></tr>
+            <tr><td>docker run <span class="flag">-d -p 80:80 --name web</span> <span class="arg">nginx</span></td><td>Sobe container nginx em background</td></tr>
+            <tr><td>docker exec <span class="flag">-it</span> <span class="arg">web bash</span></td><td>Terminal interativo no container</td></tr>
+            <tr><td>docker logs <span class="flag">-f</span> <span class="arg">web</span></td><td>Segue logs do container</td></tr>
+            <tr><td>docker stop <span class="arg">web</span></td><td>Para o container elegantemente</td></tr>
+            <tr><td>docker rm <span class="arg">web</span></td><td>Remove o container</td></tr>
+            <tr><td>docker images</td><td>Lista imagens locais</td></tr>
+            <tr><td>docker rmi <span class="arg">nginx:latest</span></td><td>Remove imagem local</td></tr>
+            <tr><td>docker build <span class="flag">-t myapp:1.0 .</span></td><td>Constrói imagem a partir do Dockerfile</td></tr>
+            <tr><td>docker compose up <span class="flag">-d</span></td><td>Sobe stack definida no compose.yml</td></tr>
+            <tr><td>docker compose down</td><td>Para e remove a stack</td></tr>
+            <tr><td>docker system prune <span class="flag">-af</span></td><td>Limpa tudo não utilizado</td></tr>
+            <tr><td>docker stats</td><td>Monitor de recursos em tempo real</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-orange"></span>Git — Fluxo de Trabalho</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>git init</td><td>Inicializa repositório local</td></tr>
+            <tr><td>git clone <span class="arg">url</span></td><td>Clona repositório remoto</td></tr>
+            <tr><td>git status</td><td>Exibe arquivos modificados/staged</td></tr>
+            <tr><td>git add <span class="flag">-p</span></td><td>Stage interativo (linha a linha)</td></tr>
+            <tr><td>git commit <span class="flag">-m</span> <span class="arg">"mensagem"</span></td><td>Commita as mudanças staged</td></tr>
+            <tr><td>git log <span class="flag">--oneline --graph --all</span></td><td>Histórico visual em uma linha</td></tr>
+            <tr><td>git diff <span class="arg">HEAD~1</span></td><td>Diff em relação ao commit anterior</td></tr>
+            <tr><td>git stash</td><td>Guarda mudanças temporariamente</td></tr>
+            <tr><td>git stash pop</td><td>Restaura última stash</td></tr>
+            <tr><td>git branch <span class="flag">-vv</span></td><td>Branches locais com tracking info</td></tr>
+            <tr><td>git rebase <span class="flag">-i HEAD~3</span></td><td>Edita os últimos 3 commits</td></tr>
+            <tr><td>git bisect start</td><td>Busca binária pelo commit que introduziu um bug</td></tr>
+            <tr><td>git blame <span class="arg">file</span></td><td>Mostra quem modificou cada linha</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-green"></span>tmux — Multiplexador de Terminal</div>
+        <div class="card-body">
+          <div class="callout info">
+            <strong>Prefix padrão:</strong> <code>Ctrl+b</code> (pressione antes de cada atalho)
+          </div>
+          <table class="cmd-table">
+            <tr><td>tmux new <span class="flag">-s</span> <span class="arg">dev</span></td><td>Nova sessão chamada "dev"</td></tr>
+            <tr><td>tmux attach <span class="flag">-t</span> <span class="arg">dev</span></td><td>Reconecta à sessão "dev"</td></tr>
+            <tr><td>tmux ls</td><td>Lista sessões ativas</td></tr>
+            <tr><td>tmux kill-session <span class="flag">-t</span> <span class="arg">dev</span></td><td>Encerra sessão</td></tr>
+            <tr><td><span class="key">prefix + c</span></td><td>Cria nova janela (window)</td></tr>
+            <tr><td><span class="key">prefix + n / p</span></td><td>Próxima / janela anterior</td></tr>
+            <tr><td><span class="key">prefix + %</span></td><td>Divide painel verticalmente</td></tr>
+            <tr><td><span class="key">prefix + "</span></td><td>Divide painel horizontalmente</td></tr>
+            <tr><td><span class="key">prefix + setas</span></td><td>Navega entre painéis</td></tr>
+            <tr><td><span class="key">prefix + z</span></td><td>Zoom no painel atual</td></tr>
+            <tr><td><span class="key">prefix + d</span></td><td>Detach (sessão continua em background)</td></tr>
+            <tr><td><span class="key">prefix + [</span></td><td>Modo cópia (scroll com teclado)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-purple"></span>Produtividade no Terminal</div>
+        <div class="card-body">
+          <table class="cmd-table">
+            <tr><td>Ctrl+r</td><td>Busca reversa no histórico (incremental)</td></tr>
+            <tr><td>Ctrl+a / Ctrl+e</td><td>Início / fim da linha</td></tr>
+            <tr><td>Ctrl+w</td><td>Apaga a palavra antes do cursor</td></tr>
+            <tr><td>Ctrl+l</td><td>Limpa o terminal</td></tr>
+            <tr><td>Alt+.</td><td>Insere o último argumento do comando anterior</td></tr>
+            <tr><td>!!</td><td>Repete o último comando</td></tr>
+            <tr><td>!$</td><td>Último argumento do comando anterior</td></tr>
+            <tr><td>watch <span class="flag">-n 2</span> <span class="arg">cmd</span></td><td>Executa comando a cada 2 segundos</td></tr>
+            <tr><td>time <span class="arg">cmd</span></td><td>Mede o tempo de execução</td></tr>
+            <tr><td>script <span class="arg">session.log</span></td><td>Grava toda a sessão do terminal</td></tr>
+            <tr><td>alias <span class="arg">ll</span>=<span class="arg">'ls -lah'</span></td><td>Cria atalho de comando</td></tr>
+            <tr><td>bc <span class="flag">-l</span></td><td>Calculadora de precisão arbitrária</td></tr>
+            <tr><td>column <span class="flag">-t</span></td><td>Formata stdin em colunas alinhadas</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // Navegação ativa via scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+
+  function updateNav() {
+    let current = '';
+    sections.forEach(sec => {
+      const top = sec.getBoundingClientRect().top;
+      if (top <= 130) current = sec.id;
+    });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+
+  function goto(id) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
