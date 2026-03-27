@@ -789,9 +789,7 @@
             <tr><td>tree <span class="flag">-L 2</span></td><td>Árvore de diretórios (2 níveis)</td></tr>
             <tr><td>which <span class="arg">cmd</span></td><td>Caminho do executável no PATH</td></tr>
             <tr><td>man <span class="arg">cmd</span></td><td>Manual do comando</td></tr>
-            <tr><td>history</td><td>Histórico de comandos</td></tr>
             <tr><td>export <span class="arg">VAR</span>=<span class="arg">val</span></td><td>Define e exporta variável</td></tr>
-            <tr><td>$PATH / $? / $$</td><td>PATH / exit code / PID atual</td></tr>
           </table>
         </div>
       </div>
@@ -947,33 +945,16 @@
       </div>
 
       <div class="card">
-        <div class="card-header"><span class="dot dot-orange"></span>ACLs — Controle de Acesso Estendido</div>
+        <div class="card-header"><span class="dot dot-orange"></span>ACLs &amp; umask</div>
         <div class="card-body">
           <table class="cmd-table">
             <tr><td>getfacl <span class="arg">file</span></td><td>Exibe ACLs do arquivo</td></tr>
             <tr><td>setfacl <span class="flag">-m u:alice:rw</span> <span class="arg">file</span></td><td>Dá leitura/escrita para alice</td></tr>
-            <tr><td>setfacl <span class="flag">-m g:devs:rx</span> <span class="arg">dir</span></td><td>Dá leitura/execução ao grupo devs</td></tr>
             <tr><td>setfacl <span class="flag">-x u:alice</span> <span class="arg">file</span></td><td>Remove ACL de alice</td></tr>
-            <tr><td>setfacl <span class="flag">-b</span> <span class="arg">file</span></td><td>Remove todas as ACLs do arquivo</td></tr>
-            <tr><td>setfacl <span class="flag">-R -m u:alice:rX</span> <span class="arg">dir/</span></td><td>Aplica recursivamente</td></tr>
-          </table>
-          <div class="callout warn" style="margin-top:12px">
-            <strong>Requisito:</strong> O filesystem deve estar montado com a opção <code>acl</code> (já padrão no ext4/xfs modernos).
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header"><span class="dot dot-purple"></span>umask &amp; Atributos Especiais</div>
-        <div class="card-body">
-          <table class="cmd-table">
+            <tr><td>setfacl <span class="flag">-b</span> <span class="arg">file</span></td><td>Remove todas as ACLs</td></tr>
             <tr><td>umask</td><td>Exibe a máscara padrão de permissões</td></tr>
-            <tr><td>umask <span class="arg">022</span></td><td>Define: arquivos=644, diretórios=755</td></tr>
-            <tr><td>umask <span class="arg">027</span></td><td>Define: arquivos=640, diretórios=750</td></tr>
-            <tr><td>lsattr <span class="arg">file</span></td><td>Lista atributos do filesystem</td></tr>
+            <tr><td>umask <span class="arg">022</span></td><td>Arquivos=644, diretórios=755</td></tr>
             <tr><td>chattr <span class="flag">+i</span> <span class="arg">file</span></td><td>Imutável — nem root pode alterar</td></tr>
-            <tr><td>chattr <span class="flag">+a</span> <span class="arg">file</span></td><td>Append-only — só permite acrescentar</td></tr>
-            <tr><td>chattr <span class="flag">-i</span> <span class="arg">file</span></td><td>Remove flag imutável</td></tr>
           </table>
         </div>
       </div>
@@ -996,35 +977,36 @@
         <div class="card-header"><span class="dot dot-green"></span>Monitoramento</div>
         <div class="card-body">
           <table class="cmd-table">
-            <tr><td>ps aux</td><td>Lista todos os processos com detalhes</td></tr>
-            <tr><td>ps <span class="flag">-ef</span></td><td>Formato completo com relações pai/filho</td></tr>
-            <tr><td>top</td><td>Monitor interativo em tempo real</td></tr>
-            <tr><td>htop</td><td>Monitor colorido e interativo (mais amigável)</td></tr>
-            <tr><td>pgrep <span class="arg">nginx</span></td><td>Retorna PIDs pelo nome do processo</td></tr>
-            <tr><td>pidof <span class="arg">sshd</span></td><td>PID de um programa em execução</td></tr>
+            <tr><td>ps aux</td><td>Lista todos os processos</td></tr>
+            <tr><td>top / htop</td><td>Monitor interativo em tempo real</td></tr>
+            <tr><td>pgrep <span class="arg">nginx</span></td><td>PIDs pelo nome do processo</td></tr>
             <tr><td>lsof <span class="flag">-p</span> <span class="arg">PID</span></td><td>Arquivos abertos por um processo</td></tr>
             <tr><td>lsof <span class="flag">-i :80</span></td><td>Processo usando a porta 80</td></tr>
             <tr><td>strace <span class="flag">-p</span> <span class="arg">PID</span></td><td>Rastreia syscalls de um processo</td></tr>
-            <tr><td>pstree</td><td>Exibe árvore de processos</td></tr>
+            <tr><td>pstree</td><td>Árvore de processos</td></tr>
           </table>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-header"><span class="dot dot-red"></span>Sinais (Signals)</div>
+        <div class="card-header"><span class="dot dot-red"></span>Sinais — Comandos</div>
         <div class="card-body">
           <table class="cmd-table">
-            <tr><td>kill <span class="arg">PID</span></td><td>Envia SIGTERM (15) — encerramento elegante</td></tr>
-            <tr><td>kill <span class="flag">-9</span> <span class="arg">PID</span></td><td>Envia SIGKILL — força encerramento imediato</td></tr>
-            <tr><td>kill <span class="flag">-HUP</span> <span class="arg">PID</span></td><td>SIGHUP (1) — recarrega configuração</td></tr>
-            <tr><td>killall <span class="arg">nginx</span></td><td>Mata todos os processos com esse nome</td></tr>
+            <tr><td>kill <span class="arg">PID</span></td><td>SIGTERM — encerramento elegante</td></tr>
+            <tr><td>kill <span class="flag">-9</span> <span class="arg">PID</span></td><td>SIGKILL — força encerramento</td></tr>
+            <tr><td>kill <span class="flag">-HUP</span> <span class="arg">PID</span></td><td>SIGHUP — recarrega configuração</td></tr>
+            <tr><td>killall <span class="arg">nginx</span></td><td>Mata todos pelo nome</td></tr>
             <tr><td>pkill <span class="arg">nginx</span></td><td>Mata por padrão de nome</td></tr>
-            <tr><td>Ctrl+C</td><td>SIGINT — interrompe o processo em foreground</td></tr>
+            <tr><td>Ctrl+C</td><td>SIGINT — interrompe foreground</td></tr>
             <tr><td>Ctrl+Z</td><td>SIGTSTP — pausa o processo</td></tr>
           </table>
-          <br>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="dot dot-red"></span>Tabela de Signals</div>
+        <div class="card-body">
           <table class="cmd-table">
-            <tr><td><strong>Signal</strong></td><td><strong>Nº</strong></td><td><strong>Uso</strong></td></tr>
             <tr><td>SIGHUP</td><td>1</td><td>Hang up / reload</td></tr>
             <tr><td>SIGINT</td><td>2</td><td>Interrupção (Ctrl+C)</td></tr>
             <tr><td>SIGTERM</td><td>15</td><td>Encerramento elegante</td></tr>
@@ -1039,15 +1021,13 @@
         <div class="card-header"><span class="dot dot-blue"></span>Job Control</div>
         <div class="card-body">
           <table class="cmd-table">
-            <tr><td><span class="arg">cmd</span> &amp;</td><td>Executa comando em background</td></tr>
-            <tr><td>jobs</td><td>Lista jobs em background na sessão atual</td></tr>
-            <tr><td>fg <span class="arg">%1</span></td><td>Traz job 1 para foreground</td></tr>
-            <tr><td>bg <span class="arg">%1</span></td><td>Continua job 1 em background</td></tr>
-            <tr><td>disown <span class="arg">%1</span></td><td>Desvincula job do terminal (sobrevive ao logout)</td></tr>
-            <tr><td>nohup <span class="arg">cmd</span> &amp;</td><td>Ignora SIGHUP — processo persiste após logout</td></tr>
-            <tr><td>wait <span class="arg">PID</span></td><td>Aguarda processo terminar</td></tr>
-            <tr><td>nice <span class="flag">-n 10</span> <span class="arg">cmd</span></td><td>Inicia com prioridade reduzida (nice 10)</td></tr>
-            <tr><td>renice <span class="flag">-5</span> <span class="flag">-p</span> <span class="arg">PID</span></td><td>Altera prioridade de processo em execução</td></tr>
+            <tr><td><span class="arg">cmd</span> &amp;</td><td>Executa em background</td></tr>
+            <tr><td>jobs</td><td>Lista jobs em background</td></tr>
+            <tr><td>fg <span class="arg">%1</span></td><td>Traz job para foreground</td></tr>
+            <tr><td>bg <span class="arg">%1</span></td><td>Continua job em background</td></tr>
+            <tr><td>disown <span class="arg">%1</span></td><td>Desvincula do terminal</td></tr>
+            <tr><td>nohup <span class="arg">cmd</span> &amp;</td><td>Persiste após logout</td></tr>
+            <tr><td>nice <span class="flag">-n 10</span> <span class="arg">cmd</span></td><td>Inicia com prioridade reduzida</td></tr>
           </table>
         </div>
       </div>
@@ -1280,7 +1260,6 @@
             <tr><td>/etc/shadow</td><td>Hashes de senhas (só root)</td></tr>
             <tr><td>/etc/group</td><td>Grupos e membros</td></tr>
             <tr><td>/etc/sudoers</td><td>Regras sudo (editar com visudo)</td></tr>
-            <tr><td>/etc/login.defs</td><td>Políticas padrão de senha</td></tr>
             <tr><td>/etc/pam.d/</td><td>Configurações de autenticação PAM</td></tr>
             <tr><td>/var/log/auth.log</td><td>Log de autenticações (Debian/Ubuntu)</td></tr>
             <tr><td>/var/log/secure</td><td>Log de autenticações (RHEL/CentOS)</td></tr>
@@ -1506,18 +1485,13 @@
         <div class="card-header"><span class="dot dot-orange"></span>LVM — Logical Volume Manager</div>
         <div class="card-body">
           <table class="cmd-table">
-            <tr><td colspan="2" style="color:var(--muted); font-size:11px; padding-bottom:6px">Physical Volumes (PV)</td></tr>
             <tr><td>pvcreate <span class="arg">/dev/sdb</span></td><td>Inicializa disco como PV</td></tr>
             <tr><td>pvs</td><td>Lista physical volumes</td></tr>
-            <tr><td colspan="2" style="color:var(--muted); font-size:11px; padding:6px 0">Volume Groups (VG)</td></tr>
             <tr><td>vgcreate <span class="arg">vg0 /dev/sdb</span></td><td>Cria volume group</td></tr>
-            <tr><td>vgextend <span class="arg">vg0 /dev/sdc</span></td><td>Adiciona PV ao VG</td></tr>
-            <tr><td>vgs</td><td>Lista volume groups</td></tr>
-            <tr><td colspan="2" style="color:var(--muted); font-size:11px; padding:6px 0">Logical Volumes (LV)</td></tr>
+            <tr><td>vgextend <span class="arg">vg0 /dev/sdc</span></td><td>Adiciona disco ao VG</td></tr>
             <tr><td>lvcreate <span class="flag">-L 20G -n data</span> <span class="arg">vg0</span></td><td>Cria LV de 20GB</td></tr>
-            <tr><td>lvextend <span class="flag">-L +10G</span> <span class="arg">/dev/vg0/data</span></td><td>Expande LV em 10GB</td></tr>
-            <tr><td>resize2fs <span class="arg">/dev/vg0/data</span></td><td>Redimensiona filesystem após lvextend</td></tr>
-            <tr><td>lvs</td><td>Lista logical volumes</td></tr>
+            <tr><td>lvextend <span class="flag">-L +10G</span> <span class="arg">/dev/vg0/data</span></td><td>Expande LV</td></tr>
+            <tr><td>resize2fs <span class="arg">/dev/vg0/data</span></td><td>Redimensiona filesystem</td></tr>
           </table>
         </div>
       </div>
